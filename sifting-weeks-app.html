@@ -203,24 +203,28 @@ body{background:#0f1e2d;color:#e8f0f8}
     <div class="sc"><div class="sv" id="stat-prayer">0</div><div class="sk">Prayer</div></div>
     <div class="sc"><div class="sv" id="stat-salvation">0</div><div class="sk">Decisions</div></div>
   </div>
-  <div class="sl">Quick Actions</div>
-  <div class="card" style="cursor:pointer;margin-bottom:8px" onclick="switchTab('log')">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div><div class="card-title">📋 Log a Contact</div><div class="card-sub">Record a new encounter or follow-up</div></div>
-      <svg width="20" height="20" fill="none" stroke="var(--gbj)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </div>
-  </div>
-  <div class="card" style="cursor:pointer;margin-bottom:8px" onclick="switchTab('daily')">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div><div class="card-title">📊 Daily Tally</div><div class="card-sub">Submit today's counts to your team</div></div>
-      <svg width="20" height="20" fill="none" stroke="var(--gbj)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </div>
-  </div>
-  <div class="card" style="cursor:pointer" onclick="switchTab('summary');buildSummary()">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div><div class="card-title">📈 Week Summary</div><div class="card-sub">Full report &amp; all contacts for your team</div></div>
-      <svg width="20" height="20" fill="none" stroke="var(--gbj)" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-    </div>
+  <div class="sl">Navigate</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+    <button onclick="switchTab('resources')" style="background:var(--gbj);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📚</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.3px">Resources</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Tools &amp; training</span>
+    </button>
+    <button onclick="switchTab('log')" style="background:var(--go);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📋</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.3px">Log Contact</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">New encounter</span>
+    </button>
+    <button onclick="switchTab('daily')" style="background:var(--gi);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📊</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.3px">Daily Tally</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Submit counts</span>
+    </button>
+    <button onclick="switchTab('summary');buildSummary()" style="background:var(--gbl);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📈</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#fff;letter-spacing:.3px">Summary</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Week report</span>
+    </button>
   </div>
   <div class="sl">Daily Checklist</div>
   <div class="card">
