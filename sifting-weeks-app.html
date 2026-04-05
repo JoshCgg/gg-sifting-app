@@ -203,7 +203,7 @@ body{background:#0f1e2d;color:#e8f0f8}
     <div class="sc"><div class="sv" id="stat-prayer">0</div><div class="sk">Prayer</div></div>
     <div class="sc"><div class="sv" id="stat-salvation">0</div><div class="sk">Decisions</div></div>
   </div>
- <div class="sl">What would you like to do?</div>
+  <div class="sl">What would you like to do?</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
     <button onclick="switchTab('resources')" style="background:var(--gi);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
       <span style="font-size:32px;line-height:1">📖</span>
@@ -239,58 +239,301 @@ body{background:#0f1e2d;color:#e8f0f8}
 
 <!-- RESOURCES -->
 <div class="screen" id="screen-resources">
-  <div class="sl">Evangelism Tools</div>
+
+  <!-- ═══════════════════════════════ PREPARE ═══════════════════════════════ -->
+  <div style="background:var(--gi);border-radius:14px;padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:28px">📖</span>
+    <div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Prepare</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">All 4 pre-trip modules</div>
+    </div>
+  </div>
+
+  <div class="rc i" onclick="toggleRC(this)">
+    <div class="rc-icon">🌍</div><div class="rc-title">Module 1 — Vision &amp; Foundations</div>
+    <div class="rc-desc">Why we go · Gateway cities · GG's strategy</div>
+    <div class="rc-body">
+      <h4>Why Does Missions Happen?</h4>
+      <p>The fact that God's name is not praised in every land among every people is an injustice against God. Missions isn't about getting a great praise report — it's about joining God on His mission to make His glory known to all people. It's not about us, our plans, our goals, our name. It's about Him.</p>
+      <div class="scr">"God is most glorified in you when you are most satisfied in Him." — John Piper</div>
+      <h4>Missions Exists Because Worship Doesn't</h4>
+      <p>The ultimate goal of the church is the glory of God. Missions is penultimate — worship is ultimate. World evangelization is the pathway to maximum joy and maximum worship. When the kingdom finally comes in glory, missions will cease.</p>
+      <h4>Why Gateway Cities?</h4>
+      <ul>
+        <li>By 2030, over 75% of the world's population will live in major cities</li>
+        <li>Cities are influential centers — ministry here goes beyond city borders into the world</li>
+        <li>Being away from home, diaspora peoples are often more receptive to the Gospel</li>
+        <li>A person reached here can carry the Gospel back to their home country</li>
+      </ul>
+      <h4>GG's 4 Goals for Short-Term Teams</h4>
+      <ul>
+        <li>🙏 <strong>Prayer</strong> — Cover our areas in prayer; battle for hearts and minds</li>
+        <li>📢 <strong>Gospel Saturation</strong> — Sow the gospel broadly in a biblically and culturally appropriate way</li>
+        <li>🕊️ <strong>Find Persons of Peace</strong> — Locate those ready to receive Jesus and reach their community</li>
+        <li>🤝 <strong>Build Goodwill</strong> — Discern spiritual state of individuals; connect them to long-term workers</li>
+      </ul>
+      <div class="scr">"So neither he who plants nor he who waters is anything, but only God who gives the growth." — 1 Corinthians 3:7</div>
+    </div>
+  </div>
+
+  <div class="rc" onclick="toggleRC(this)">
+    <div class="rc-icon">🛡️</div><div class="rc-title">Module 2 — Spiritual Preparation</div>
+    <div class="rc-desc">Prayer is the beginning, middle, and end of any meaningful trip</div>
+    <div class="rc-body">
+      <div class="scr">"Prayer is the beginning, middle, and end of any meaningful short-term trip. If you don't intend to pray, don't plan to come."</div>
+      <h4>Before You Go Out Each Day</h4>
+      <ul>
+        <li>Spend time in personal prayer and Scripture — don't skip quiet time</li>
+        <li>Confess anything that might hinder the Spirit's work through you</li>
+        <li>Ask God to fill you afresh — not your skill, but His power</li>
+        <li>Pray with your team before leaving; lay hands on each person in groups of 3</li>
+      </ul>
+      <h4>What to Surrender</h4>
+      <ul>
+        <li>Results are God's job — your job is faithfulness</li>
+        <li>Many teams spend weeks planning logistics but little time preparing spiritually, then wonder why God's voice is unclear</li>
+        <li>Ministry among least-reached peoples requires a redefinition of what missions is about</li>
+        <li>A lack of spiritual boldness is a sign of not operating in the Holy Spirit's power</li>
+      </ul>
+      <h4>Build a Prayer Team at Home</h4>
+      <p>Commit yourself to developing a team of prayer partners who will pray daily for you while you are here. The work depends on it.</p>
+      <div class="scr">"The harvest is plentiful but the workers are few. Ask the Lord of the harvest to send out workers into his harvest field." — Matthew 9:37–38</div>
+    </div>
+  </div>
+
+  <div class="rc" onclick="toggleRC(this)">
+    <div class="rc-icon">📅</div><div class="rc-title">12-Day Prayer Guide</div>
+    <div class="rc-desc">Daily prayer focus — start before the trip, continue through it</div>
+    <div class="rc-body" id="prayer-guide-container"></div>
+  </div>
+
+  <div class="rc o" onclick="toggleRC(this)">
+    <div class="rc-icon">📝</div><div class="rc-title">Module 3 — My Story &amp; His Story</div>
+    <div class="rc-desc">Prepare your testimony · Learn the Korban tool</div>
+    <div class="rc-body">
+      <div class="scr">"Our job is not to save people, but to expose them to the power of the Gospel so the Holy Spirit can convict them of sin and show them the way of salvation."</div>
+      <h4>Telling My Story — Prepare Your Testimony</h4>
+      <p>Read John 4:4–42. Notice how God used the Samaritan woman's simple testimony as a bridge to point her people to Jesus. This is our goal — introducing people to Jesus and helping them discover God's Word for themselves.</p>
+      <p>Your testimony should have <strong>one key adjective</strong> describing who you were before Jesus, and <strong>one key adjective</strong> describing what changed. Keep it to around <strong>60 seconds</strong>. Make sure it's relevant to people who are not from a Christian background.</p>
+      <h4>Your Testimony Framework</h4>
+      <ul>
+        <li>✏️ <strong>My life before Jesus:</strong> (one honest adjective + brief story)</li>
+        <li>✏️ <strong>How I met Jesus:</strong> (keep it simple — what happened?)</li>
+        <li>✏️ <strong>How my life has changed:</strong> (one adjective + what's different now)</li>
+      </ul>
+      <p style="font-size:12px;color:#7a8fa0;font-style:italic">If you were saved very young, share a testimony of a time God intervened in your life and changed things for you.</p>
+      <h4>Telling His Story — The Korban (Sacrifice) Tool</h4>
+      <p>Korban is a powerful way to sift for Persons of Peace within Muslim communities. It uses the concept of sacrifice — deeply familiar in Islamic culture — as a bridge to the cross.</p>
+      <p>📺 Watch the example video before your trip: <strong>youtube.com/watch?v=eB3XwF33v3Q</strong></p>
+      <div class="scr">"Korbani" — Sacrifice. This single word opens doors with Muslims that few other words can.</div>
+      <h4>Key Bridge Words to Learn</h4>
+      <ul>
+        <li>🕌 <strong>Assalamu Alaikum</strong> — Peace be upon you (Arabic/Urdu greeting)</li>
+        <li>🇧🇩 <strong>Kemon achen</strong> — How are you? (Bengali)</li>
+        <li>🙏 <strong>Namaste</strong> — Greeting (Hindi/Nepali)</li>
+        <li>✝️ <strong>Isa Al Masih</strong> — Jesus the Messiah (use instead of "Jesus")</li>
+        <li>🐑 <strong>Korbani</strong> — Sacrifice (the bridge to the cross)</li>
+      </ul>
+      <h4>Practice Assignment</h4>
+      <p>Before your next team meeting, share your testimony and the Korban story with someone who is not yet a Christian. Come ready to debrief.</p>
+    </div>
+  </div>
+
+  <div class="rc i" onclick="toggleRC(this)">
+    <div class="rc-icon">🕌</div><div class="rc-title">Module 4 — Intro to Islam &amp; Cultural Tips</div>
+    <div class="rc-desc">What Muslims believe · How to engage respectfully</div>
+    <div class="rc-body">
+      <h4>The Five Pillars of Islam</h4>
+      <ul>
+        <li><strong>Shahada</strong> — "There is no God but Allah and Muhammad is His prophet" — recited at birth and death</li>
+        <li><strong>Salat</strong> — Ritual prayer 5 times daily facing Mecca (dawn, midday, mid-afternoon, sunset, two hours after sunset)</li>
+        <li><strong>Sawm</strong> — Fasting during Ramadan from sunrise to sunset</li>
+        <li><strong>Zakat</strong> — Giving 2.5% of accumulated wealth annually to the poor or mosque</li>
+        <li><strong>Hajj</strong> — Pilgrimage to Mecca at least once in a lifetime</li>
+      </ul>
+      <h4>Key Doctrines to Understand</h4>
+      <ul>
+        <li>Allah is absolute and has no partners — avoid "Son of God" language initially</li>
+        <li>Isa (Jesus) is honored as a prophet, Messiah, Word of Allah, and Spirit of Allah — 97 references in the Qur'an</li>
+        <li>Muslims believe the Bible has been corrupted — use "Injil" (Gospel) language; don't argue this point</li>
+        <li>Destiny (Insya-Allah / "If God wills") — everything is in Allah's hands; compare James 4:13–15</li>
+        <li>Good deeds must outweigh bad for Paradise — they have no assurance of salvation</li>
+      </ul>
+      <h4>Bridge Points for Conversation</h4>
+      <ul>
+        <li><strong>Start with Isa Al Masih</strong> — Muslims deeply respect Isa; beginning here opens hearts</li>
+        <li><strong>Use Korbani</strong> — The sacrifice concept powerfully connects to the cross</li>
+        <li>Opening question: <em>"What do you think about Isa Al Masih?"</em></li>
+        <li>The Qur'an affirms Isa was born of a virgin, performed miracles, and will return — build from there</li>
+      </ul>
+      <h4>Cultural Tips — Relating Well</h4>
+      <ul>
+        <li>Muslims value <strong>hospitality over schedules</strong> — be flexible and unhurried</li>
+        <li>Use <strong>"Selam"</strong> or <strong>"Assalamu Alaikum"</strong> as a greeting — they will light up</li>
+        <li>Remove shoes when entering a home if they do</li>
+        <li>Accept offered tea or food — refusing can offend deeply</li>
+        <li>Touching/handshakes are typically same-sex only; don't offer your hand to the opposite gender first</li>
+        <li>Be careful laying hands on Muslims while praying — ask permission first; some find it offensive</li>
+        <li>Don't press conversation during prayer times (5 daily)</li>
+        <li><strong>Men primarily with men; women with women</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ PRAY ═══════════════════════════════ -->
+  <div style="background:var(--gbl);border-radius:14px;padding:16px 18px;margin:24px 0 14px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:28px">🙏</span>
+    <div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Pray</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">Prayer walking &amp; spiritual power</div>
+    </div>
+  </div>
+
+  <div class="rc" onclick="toggleRC(this)">
+    <div class="rc-icon">🚶</div><div class="rc-title">Prayer Walking Guide</div>
+    <div class="rc-desc">Praying on-site with insight for your specific area</div>
+    <div class="rc-body">
+      <div class="scr">"Prayer walking is praying on-site with insight for specific areas around you, and covering these areas with God's presence as you walk."</div>
+      <h4>Why Walk While You Pray?</h4>
+      <ul>
+        <li>Walking physically integrates you in a place — you begin to pray with your whole body, not just your mind</li>
+        <li>Being there makes you aware of specific things to pray for that you'd never think of at home</li>
+        <li>Walking is an act of confidence in God's power over a situation</li>
+        <li>Your presence itself is a witness — people notice that someone cares enough to show up</li>
+      </ul>
+      <h4>Before You Go Out</h4>
+      <ul>
+        <li>Begin with worship — dedicate yourself and the next few hours to God</li>
+        <li>Read a passage to focus your attention on what you're about to do</li>
+        <li>Be quiet before God and listen — tune yourself to His voice</li>
+        <li>Resolve any team tensions before you start — effective prayer is compromised by team conflict</li>
+      </ul>
+      <h4>Organizing the Walk</h4>
+      <ul>
+        <li>Divide into groups of 2–3 — enough for agreement, not so many that some can't participate</li>
+        <li>Split up experienced prayer walkers between groups</li>
+        <li>Decide on a route; be flexible with timing — 1–2 hours is a good start</li>
+        <li>Balance three elements: <strong>worship · spiritual warfare · welcoming Christ</strong></li>
+      </ul>
+      <h4>What to Pray</h4>
+      <ul>
+        <li>Spiritual breakthrough in every home on every street</li>
+        <li>Salvations — pray for people by name when you know them</li>
+        <li>For Persons of Peace — ask God to highlight them to you</li>
+        <li>Against spiritual darkness — that bondage be broken</li>
+        <li>For laborers — more long-term workers for this harvest</li>
+      </ul>
+      <h4>If Asked What You're Doing</h4>
+      <p><em>"We're praying blessings over the neighborhood — can we pray for you?"</em></p>
+      <p>Note where prayer feels heavy or blocked — report it to your team leader. Take breaks — this is spiritually exhausting work.</p>
+    </div>
+  </div>
+
+  <div class="rc o" onclick="toggleRC(this)">
+    <div class="rc-icon">⚡</div><div class="rc-title">Holy Spirit's Power — John 14:12</div>
+    <div class="rc-desc">Why you can do greater things than you think</div>
+    <div class="rc-body">
+      <div class="scr">"Whoever believes in me will also do the works that I do; and greater works than these will he do, because I am going to the Father." — John 14:12</div>
+      <h4>Knowledge vs. Power</h4>
+      <p>The apostles had 3½ years with Jesus — knowledge of Him — but at the crucifixion they all deserted Him. They had knowledge but not His power. Something had to change.</p>
+      <p>In Acts 1, God sent the Holy Spirit. When Jesus went to heaven, God put His Spirit inside every believer. We can now be "little Christs" — carrying His presence, doing His works.</p>
+      <h4>Peter Before and After Pentecost</h4>
+      <p>In the Garden of Gethsemane, Peter denied Christ three times. A few months later, that same Peter stood and boldly proclaimed Jesus to thousands. Was the situation less dangerous? No. The Spirit had come.</p>
+      <div class="scr">"A lack of spiritual boldness is a sign that we are not operating in the power of the Holy Spirit."</div>
+      <h4>Be Filled Daily</h4>
+      <p>This isn't a one-time experience. You need to be filled with the Holy Spirit every day. Without Him, you will quickly get discouraged and stop serving.</p>
+      <div class="scr">"Do not be drunk with wine... but be filled with the Spirit." — Ephesians 5:18</div>
+      <h4>Pre-Outreach Prayer</h4>
+      <p>Break into groups of 3. Take turns laying hands on each person. Ask God to fill them so that when they speak today, their words carry the very authority of God.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ SHARE ═══════════════════════════════ -->
+  <div style="background:var(--go);border-radius:14px;padding:16px 18px;margin:24px 0 14px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:28px">💬</span>
+    <div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Share</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">Gospel tools · Discipleship · Quick references</div>
+    </div>
+  </div>
+
   <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">✝️</div><div class="rc-title">3 Circles Gospel Presentation</div>
     <div class="rc-desc">Visual gospel tool that crosses language barriers</div>
     <div class="rc-body">
       <h4>How to Begin</h4>
-      <p>Ask: <em>"Can I share with you a picture of how God met my greatest need?"</em> Draw as you talk.</p>
+      <p><em>"Can I share with you a picture of how God met my greatest need?"</em> Draw as you talk. No paper? Draw in the air or on your hand.</p>
       <h4>Circle 1 — God's Perfect Design</h4>
-      <p>Draw a circle. God created everything good — us, relationships, the world.</p>
+      <p>Draw a circle. God created everything good — us, relationships, the world. This is where we were made to live.</p>
       <h4>Circle 2 — Sin → Brokenness</h4>
-      <p>Draw an arrow out, then a jagged broken circle. We try to escape brokenness on our own — but we can't get back.</p>
+      <p>Draw an arrow out, then a jagged broken circle. Everywhere we look we see brokenness. We try to escape it on our own — but we can't get back.</p>
       <h4>The Cross — Jesus (Isa Al Masih / Korbani)</h4>
-      <div class="scr">"If we TURN from sin and BELIEVE in Jesus... through Him we are restored to God's perfect design." — Romans 10:9</div>
-      <p>Jesus lived a perfect life, died as Korbani (sacrifice) for our sin, rose 3 days later. Draw a cross. Arrow back to God's design.</p>
+      <ul>
+        <li>Jesus (God's Spirit and God's Word) came to earth — perfect life, no sin</li>
+        <li>Died as Korbani — sacrifice — to pay for the sin and brokenness of the world</li>
+        <li>Rose 3 days later and returned to heaven</li>
+      </ul>
+      <div class="scr">"If we TURN from sin and BELIEVE in Jesus, through Him we are restored to God's Perfect Design." — Romans 10:9</div>
       <h4>The Three Responses</h4>
       <ul>
-        <li>🟢 <strong>Green — Believed:</strong> Pray together. Immediately begin 411 discipleship.</li>
-        <li>🟡 <strong>Yellow — Open:</strong> Schedule follow-up. Give Jesus film. Note their address.</li>
-        <li>🔴 <strong>Red — Not ready:</strong> Offer prayer. Leave film. Keep relationship warm. Move on.</li>
+        <li>🟢 <strong>Green — Believed:</strong> Pray together immediately. Begin 411 discipleship. Call team leader.</li>
+        <li>🟡 <strong>Yellow — Open:</strong> Schedule follow-up. Give Jesus film. Note their address and contact info.</li>
+        <li>🔴 <strong>Red — Not ready:</strong> Offer prayer. Leave film. Keep relationship warm. Move on and keep searching.</li>
       </ul>
-      <h4>Key Bridge Phrases by Language</h4>
-      <ul>
-        <li>🕌 <strong>Assalamu Alaikum</strong> — Peace be upon you (Arabic/Urdu)</li>
-        <li>🇧🇩 <strong>Kemon achen</strong> — How are you? (Bengali)</li>
-        <li>🙏 <strong>Namaste</strong> — Greeting (Hindi/Nepali)</li>
-        <li>✝️ <strong>Isa Al Masih</strong> — Jesus the Messiah</li>
-        <li>🐑 <strong>Korbani</strong> — Sacrifice (powerful bridge to the cross)</li>
-      </ul>
+      <p>You will offer a Jesus film to everyone you meet as a parting gift.</p>
     </div>
   </div>
+
   <div class="rc o" onclick="toggleRC(this)">
+    <div class="rc-icon">🐑</div><div class="rc-title">Korban Quick Reference</div>
+    <div class="rc-desc">Field card for the sacrifice bridge — use with Muslim neighbors</div>
+    <div class="rc-body">
+      <div class="scr">"Korbani" — Sacrifice. This concept is deeply embedded in Islamic culture and powerfully bridges to the cross.</div>
+      <h4>The Bridge in One Sentence</h4>
+      <p>Muslims understand and deeply value sacrifice (Korbani). Eid al-Adha — the Festival of Sacrifice — commemorates Ibrahim's willingness to sacrifice his son. Use this shared concept to introduce Jesus as God's ultimate Korbani.</p>
+      <h4>Opening the Conversation</h4>
+      <ul>
+        <li><em>"What do you think about Isa Al Masih?"</em></li>
+        <li><em>"Have you heard of Korbani — the idea of a perfect sacrifice for sin?"</em></li>
+        <li><em>"Can I show you something about Isa from the Injil (Gospel)?"</em></li>
+      </ul>
+      <h4>Key Points to Cover</h4>
+      <ul>
+        <li>God requires a sacrifice for sin — this is in the Taurat (Torah) and Injil (Gospel)</li>
+        <li>Every animal sacrifice pointed forward to the one perfect Korbani</li>
+        <li>Isa Al Masih is that Korbani — sinless, chosen by God, raised from death</li>
+        <li>Through Isa's Korbani, we can be forgiven and restored to God</li>
+      </ul>
+      <h4>Watch Before Your Trip</h4>
+      <p>📺 <strong>youtube.com/watch?v=eB3XwF33v3Q</strong> — Example of the Korban presentation in action.</p>
+      <div class="scr">"Behold, the Lamb of God, who takes away the sin of the world!" — John 1:29</div>
+    </div>
+  </div>
+
+  <div class="rc i" onclick="toggleRC(this)">
     <div class="rc-icon">🏠</div><div class="rc-title">House of Peace Search — Luke 10</div>
     <div class="rc-desc">Finding Persons of Peace door-to-door</div>
     <div class="rc-body">
       <div class="scr">"Whatever house you enter, first say 'Peace be to this house!'" — Luke 10:5</div>
-      <h4>Your Opening Line</h4>
-      <p><em>"Hi, we're volunteers praying blessings over families in the neighborhood. Could we offer a prayer for your home?"</em></p>
+      <h4>Suggested Script</h4>
+      <ul>
+        <li><strong>Introduce:</strong> <em>"Hi, I'm _______ and this is my friend _______"</em></li>
+        <li><strong>Care:</strong> <em>"...and we're out serving our community by asking God to bless this neighborhood and provide for people's needs."</em></li>
+        <li><strong>Ask:</strong> <em>"Is there anything we can pray for you and your family?"</em></li>
+        <li><strong>Listen.</strong> Then respond based on their answer.</li>
+      </ul>
+      <h4>If YES — Pray, Then Transition</h4>
+      <p><em>"God, thank you that you love [name] and care for their needs. We pray in Jesus' name that you would bless this family by revealing yourself to them in a very special way..."</em> Then: <em>"Thank you for letting us pray for you. I'm curious — are you religious?"</em> → Continue to Gospel.</p>
+      <h4>If NO — Gently Transition</h4>
+      <p><em>"Ok. Are you sure? Are you not religious at all?"</em> → Try to move to Gospel dialogue. If they close the door, thank them and move on.</p>
       <h4>Three Signs of a Person of Peace</h4>
       <ul>
         <li>✅ <strong>Accepts the Messenger</strong> — welcomes you warmly</li>
         <li>✅ <strong>Accepts the Message</strong> — receptive to what you share</li>
         <li>✅ <strong>Accepts the Mission</strong> — wants others in their community to know</li>
       </ul>
-      <h4>Your Responsibility</h4>
-      <ul>
-        <li><strong>Pray</strong> for laborers before you go out</li>
-        <li><strong>Go</strong> and find the Person of Peace</li>
-        <li>When found: <strong>STAY and invest</strong> — the POP gathers their own community</li>
-        <li>No POP found: <strong>leave and keep searching</strong></li>
-      </ul>
-      <h4>If Someone Is Very Open</h4>
-      <p>Call your team leader immediately. Schedule Bible study. Bring a local believer if possible.</p>
+      <h4>When You Find One</h4>
+      <p>Call your team leader immediately. Stay and invest — the Person of Peace gathers their own community. Don't move on too fast. Schedule a Bible study. Bring a local believer if possible.</p>
       <h4>3 P's When You Enter a Home</h4>
       <ul>
         <li>⚡ <strong>Power</strong> — Pray in the authority of Jesus</li>
@@ -299,95 +542,67 @@ body{background:#0f1e2d;color:#e8f0f8}
       </ul>
     </div>
   </div>
-  <div class="rc i" onclick="toggleRC(this)">
+
+  <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">📖</div><div class="rc-title">411 Discipleship Tool</div>
     <div class="rc-desc">4 questions · 1 paper · 1 hour — for new disciples</div>
     <div class="rc-body">
       <div class="scr">"Go therefore and make disciples of all nations..." — Matthew 28:19</div>
       <h4>The 4 Questions</h4>
       <ul>
-        <li>❓ <strong>WHY?</strong> Your identity as Ambassador (2 Cor. 5:17–21)</li>
-        <li>👤 <strong>WHO?</strong> Persons of Peace + your Oikos network</li>
-        <li>💬 <strong>WHAT?</strong> The 3 Circles gospel</li>
-        <li>📅 <strong>WHEN?</strong> Specific calendar goals set before they leave</li>
+        <li>❓ <strong>WHY?</strong> Your identity as Ambassador — making disciples isn't just what you do, it's who you are (2 Cor. 5:17–21)</li>
+        <li>👤 <strong>WHO?</strong> Persons of Peace + your Oikos (household network)</li>
+        <li>💬 <strong>WHAT?</strong> The 3 Circles gospel presentation</li>
+        <li>📅 <strong>WHEN?</strong> Specific calendar goals before they leave</li>
       </ul>
       <h4>Oikos Map (WHO? Part 2)</h4>
-      <p>Draw a circle with the person's name. Map relationships far from God — 4 generations out. This becomes their personal prayer and evangelism strategy.</p>
-      <h4>4 WHEN? Goals to Set</h4>
+      <p>Draw a circle with the person's name in the center. Map relationships far from God — go out 4 generations. This becomes their personal prayer and evangelism strategy. Pray for these people by name right now.</p>
+      <h4>4 WHEN? Goals to Set Before They Leave</h4>
       <ul>
-        <li>Daily time to <strong>PRAY</strong> for their oikos</li>
-        <li>Name someone to <strong>SHARE</strong> gospel with this week</li>
-        <li>Schedule to <strong>TRAIN</strong> someone in 411</li>
-        <li>Schedule <strong>START</strong> — first Commands of Christ meeting at obeychrist.com</li>
+        <li>📆 <strong>PRAY</strong> — Daily time to pray for their Oikos (set a specific time)</li>
+        <li>👋 <strong>SHARE</strong> — One person from their Oikos to share the gospel with this week (name + day/time)</li>
+        <li>🎓 <strong>TRAIN</strong> — When will they train someone else in 411?</li>
+        <li>🚀 <strong>START</strong> — First Commands of Christ meeting at obeychrist.com (When? Where? Who else?)</li>
+      </ul>
+      <h4>If Someone Believes — Do This Immediately</h4>
+      <ul>
+        <li>Pray together right then</li>
+        <li>Begin 411 on the spot — don't wait</li>
+        <li>Schedule your next meeting before you leave them</li>
+        <li>Call your team leader</li>
       </ul>
     </div>
   </div>
-  <div class="sl">Spiritual Preparation</div>
-  <div class="rc" onclick="toggleRC(this)">
-    <div class="rc-icon">🙏</div><div class="rc-title">Prayer Walking Guide</div>
-    <div class="rc-desc">How to intercede powerfully for your area</div>
-    <div class="rc-body">
-      <div class="scr">"The harvest is plentiful, but the laborers are few. Pray therefore to the Lord of the harvest." — Luke 10:2</div>
-      <h4>What to Pray</h4>
-      <ul>
-        <li>Spiritual breakthrough in every home</li>
-        <li>Salvations — pray for people by name</li>
-        <li>For laborers — more workers in this harvest</li>
-        <li>For Persons of Peace — ask God to highlight them</li>
-        <li>Against spiritual darkness — that bondage be broken</li>
-      </ul>
-      <h4>Tips</h4>
-      <ul>
-        <li>Try to eat in the neighborhood — stay immersed</li>
-        <li>If asked what you're doing: <em>"Praying blessings — can we pray for you?"</em></li>
-        <li>Note where prayer feels heavy or blocked — tell your leader</li>
-        <li>Take breaks — this is spiritually exhausting</li>
-      </ul>
+
+  <!-- ═══════════════════════════════ CELEBRATE ═══════════════════════════════ -->
+  <div style="background:var(--gbj);border-radius:14px;padding:16px 18px;margin:24px 0 14px;display:flex;align-items:center;gap:12px">
+    <span style="font-size:28px">🎉</span>
+    <div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Celebrate</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">Track what God is doing</div>
     </div>
   </div>
-  <div class="rc o" onclick="toggleRC(this)">
-    <div class="rc-icon">⚡</div><div class="rc-title">Holy Spirit's Power — John 14:12</div>
-    <div class="rc-desc">Why you can do greater things than you think</div>
-    <div class="rc-body">
-      <div class="scr">"Whoever believes in me will also do the works that I do; and greater works than these will he do." — John 14:12</div>
-      <h4>The Shift: Knowledge → Power</h4>
-      <p>The disciples had 3½ years with Jesus and still fled at the cross. What changed? The Holy Spirit at Pentecost. Peter went from denying Christ to boldly preaching to thousands.</p>
-      <h4>You Carry That Same Spirit</h4>
-      <p>You are a "little Christ" — carrying Jesus' presence into every conversation. A lack of boldness is a sign of not walking in the Spirit's power.</p>
-      <div class="scr">"Do not be drunk with wine... but be filled with the Spirit." — Ephesians 5:18</div>
-      <h4>Before You Go Out — Group Prayer</h4>
-      <p>Groups of 3. Lay hands on each person. Ask God to fill them so that when they speak, their words carry His authority.</p>
-    </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+    <button onclick="switchTab('log')" style="background:#fff;border:2px solid var(--gbj);border-radius:12px;padding:16px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.93)'" ontouchend="this.style.filter=''">
+      <span style="font-size:26px">📋</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gi)">Log Contact</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#7a8fa0;font-weight:500">New encounter</span>
+    </button>
+    <button onclick="switchTab('daily')" style="background:#fff;border:2px solid var(--gbj);border-radius:12px;padding:16px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.93)'" ontouchend="this.style.filter=''">
+      <span style="font-size:26px">📊</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gi)">Daily Tally</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#7a8fa0;font-weight:500">Submit counts</span>
+    </button>
   </div>
-  <div class="rc i" onclick="toggleRC(this)">
-    <div class="rc-icon">🌍</div><div class="rc-title">Cultural &amp; Religious Awareness</div>
-    <div class="rc-desc">Islam basics and cultural engagement tips</div>
-    <div class="rc-body">
-      <h4>What Muslims Believe</h4>
-      <ul>
-        <li>One God (Allah) — no partners; avoid "Son of God" language initially</li>
-        <li>Jesus (Isa) is honored as a prophet and the Messiah</li>
-        <li>Strong respect for Scripture — use "Injil" (Gospel) language</li>
-        <li>Five pillars: Shahada, Prayer (5×/day), Fasting, Zakat, Hajj</li>
-      </ul>
-      <h4>Bridge Points</h4>
-      <ul>
-        <li><strong>Isa Al Masih</strong> — Muslims deeply respect Isa; start here</li>
-        <li><strong>Korbani</strong> — Sacrifice concept connects to the cross powerfully</li>
-        <li>Opening: <em>"What do you think about Isa Al Masih?"</em></li>
-      </ul>
-      <h4>Cultural Respect</h4>
-      <ul>
-        <li>Remove shoes when entering a home if they do</li>
-        <li>Accept offered tea or food — refusing can offend</li>
-        <li>Greet with Assalamu Alaikum — they will light up</li>
-        <li>Don't press conversation during prayer times</li>
-        <li>Men primarily with men; women with women</li>
-      </ul>
+  <button onclick="switchTab('summary');buildSummary()" style="background:#fff;border:2px solid var(--gbj);border-radius:12px;padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;width:100%;margin-bottom:24px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.93)'" ontouchend="this.style.filter=''">
+    <span style="font-size:26px">📈</span>
+    <div style="text-align:left">
+      <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gi)">Weekly Summary</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:10px;color:#7a8fa0;font-weight:500">Totals, follow-ups &amp; full report</div>
     </div>
-  </div>
-  <div class="sl">12-Day Prayer Guide</div>
-  <div id="prayer-guide-container"></div>
+  </button>
+
 </div>
 
 <!-- LOG CONTACT -->
@@ -463,7 +678,7 @@ body{background:#0f1e2d;color:#e8f0f8}
     <div class="card">
       <div class="fg"><label class="fl">Scriptures Shared</label><input type="text" class="fi" id="contact-scripture" placeholder="e.g. Romans 10:9, John 3:16, Luke 10..."></div>
       <div class="fg"><label class="fl">Family Members Present</label><input type="text" class="fi" id="contact-family" placeholder="e.g. wife + 3 children, husband, elderly mother..."></div>
-      <div class="fg"><label class="fl">Location / Street / Address</label><input type="text" class="fi" id="contact-location" placeholder="e.g. 72nd & Roosevelt, Apt 3B..."></div>
+      <div class="fg"><label class="fl">Location / Street / Address</label><input type="text" class="fi" id="contact-location" placeholder="e.g. 72nd &amp; Roosevelt, Apt 3B..."></div>
       <div class="fg"><label class="fl">Contact Info (phone / address for follow-up)</label><input type="text" class="fi" id="contact-info" placeholder="Phone number or address"></div>
       <div class="fg"><label class="fl">Best Time for Follow-up</label><input type="text" class="fi" id="contact-followup-time" placeholder="e.g. evenings, Friday mornings, call first..."></div>
       <div class="fg"><label class="fl">Follow-up Priority</label>
