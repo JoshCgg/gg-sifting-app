@@ -27,6 +27,10 @@ body{font-family:'Montserrat',sans-serif;background:var(--gg);color:var(--gi);mi
 .main{padding:20px 16px 90px;max-width:600px;margin:0 auto}
 .screen{display:none}
 .screen.active{display:block}
+.back-bar{display:flex;align-items:center;gap:10px;background:var(--gbj);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;cursor:pointer;transition:filter .1s}
+.back-bar:active{filter:brightness(.9)}
+.back-bar-label{font-size:13px;font-weight:700;color:#fff;letter-spacing:.3px}
+.back-bar-sub{font-size:10px;color:rgba(255,255,255,.8);font-weight:500;margin-top:1px}
 .sl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gi);opacity:.5;margin:24px 0 10px}
 .sl:first-child{margin-top:0}
 .card{background:#fff;border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
@@ -139,6 +143,9 @@ body{font-family:'Montserrat',sans-serif;background:var(--gg);color:var(--gi);mi
 .uu{background:#ffebee;color:#c62828}
 .uv{background:#fff3e0;color:#e65100}
 .uc{background:#fff8e1;color:#f57f17}
+.sec-hdr{border-radius:14px;padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.sec-hdr-title{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff}
+.sec-hdr-sub{font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500}
 @media(prefers-color-scheme:dark){
 body{background:#0f1e2d;color:#e8f0f8}
 .topnav{background:#0a1520}
@@ -205,22 +212,22 @@ body{background:#0f1e2d;color:#e8f0f8}
   </div>
   <div class="sl">What would you like to do?</div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-    <button onclick="switchTab('resources')" style="background:var(--gi);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+    <button onclick="switchTab('prepare')" style="background:var(--gi);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
       <span style="font-size:32px;line-height:1">📖</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Prepare</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Pre-trip &amp; training</span>
     </button>
-    <button onclick="switchTab('resources')" style="background:var(--gbl);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+    <button onclick="switchTab('pray')" style="background:var(--gbl);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
       <span style="font-size:32px;line-height:1">🙏</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Pray</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Prayer &amp; walking guides</span>
     </button>
-    <button onclick="switchTab('resources')" style="background:var(--go);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+    <button onclick="switchTab('share')" style="background:var(--go);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
       <span style="font-size:32px;line-height:1">💬</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Share</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Gospel &amp; culture tips</span>
     </button>
-    <button onclick="switchTab('summary');buildSummary()" style="background:var(--gbj);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:transform .1s,filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+    <button onclick="switchTab('celebrate')" style="background:var(--gbj);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
       <span style="font-size:32px;line-height:1">🎉</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Celebrate</span>
       <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Tracking &amp; reports</span>
@@ -237,18 +244,12 @@ body{background:#0f1e2d;color:#e8f0f8}
   </div>
 </div>
 
-<!-- RESOURCES -->
-<div class="screen" id="screen-resources">
-
-  <!-- ═══════════════════════════════ PREPARE ═══════════════════════════════ -->
-  <div style="background:var(--gi);border-radius:14px;padding:16px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px">
+<!-- PREPARE -->
+<div class="screen" id="screen-prepare">
+  <div class="sec-hdr" style="background:var(--gi)">
     <span style="font-size:28px">📖</span>
-    <div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Prepare</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">All 4 pre-trip modules</div>
-    </div>
+    <div><div class="sec-hdr-title">Prepare</div><div class="sec-hdr-sub">All 4 pre-trip modules</div></div>
   </div>
-
   <div class="rc i" onclick="toggleRC(this)">
     <div class="rc-icon">🌍</div><div class="rc-title">Module 1 — Vision &amp; Foundations</div>
     <div class="rc-desc">Why we go · Gateway cities · GG's strategy</div>
@@ -275,7 +276,6 @@ body{background:#0f1e2d;color:#e8f0f8}
       <div class="scr">"So neither he who plants nor he who waters is anything, but only God who gives the growth." — 1 Corinthians 3:7</div>
     </div>
   </div>
-
   <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">🛡️</div><div class="rc-title">Module 2 — Spiritual Preparation</div>
     <div class="rc-desc">Prayer is the beginning, middle, and end of any meaningful trip</div>
@@ -300,13 +300,11 @@ body{background:#0f1e2d;color:#e8f0f8}
       <div class="scr">"The harvest is plentiful but the workers are few. Ask the Lord of the harvest to send out workers into his harvest field." — Matthew 9:37–38</div>
     </div>
   </div>
-
   <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">📅</div><div class="rc-title">12-Day Prayer Guide</div>
     <div class="rc-desc">Daily prayer focus — start before the trip, continue through it</div>
     <div class="rc-body" id="prayer-guide-container"></div>
   </div>
-
   <div class="rc o" onclick="toggleRC(this)">
     <div class="rc-icon">📝</div><div class="rc-title">Module 3 — My Story &amp; His Story</div>
     <div class="rc-desc">Prepare your testimony · Learn the Korban tool</div>
@@ -338,7 +336,6 @@ body{background:#0f1e2d;color:#e8f0f8}
       <p>Before your next team meeting, share your testimony and the Korban story with someone who is not yet a Christian. Come ready to debrief.</p>
     </div>
   </div>
-
   <div class="rc i" onclick="toggleRC(this)">
     <div class="rc-icon">🕌</div><div class="rc-title">Module 4 — Intro to Islam &amp; Cultural Tips</div>
     <div class="rc-desc">What Muslims believe · How to engage respectfully</div>
@@ -379,16 +376,14 @@ body{background:#0f1e2d;color:#e8f0f8}
       </ul>
     </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════ PRAY ═══════════════════════════════ -->
-  <div style="background:var(--gbl);border-radius:14px;padding:16px 18px;margin:24px 0 14px;display:flex;align-items:center;gap:12px">
+<!-- PRAY -->
+<div class="screen" id="screen-pray">
+  <div class="sec-hdr" style="background:var(--gbl)">
     <span style="font-size:28px">🙏</span>
-    <div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Pray</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">Prayer walking &amp; spiritual power</div>
-    </div>
+    <div><div class="sec-hdr-title">Pray</div><div class="sec-hdr-sub">Prayer walking &amp; spiritual power</div></div>
   </div>
-
   <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">🚶</div><div class="rc-title">Prayer Walking Guide</div>
     <div class="rc-desc">Praying on-site with insight for your specific area</div>
@@ -428,7 +423,6 @@ body{background:#0f1e2d;color:#e8f0f8}
       <p>Note where prayer feels heavy or blocked — report it to your team leader. Take breaks — this is spiritually exhausting work.</p>
     </div>
   </div>
-
   <div class="rc o" onclick="toggleRC(this)">
     <div class="rc-icon">⚡</div><div class="rc-title">Holy Spirit's Power — John 14:12</div>
     <div class="rc-desc">Why you can do greater things than you think</div>
@@ -447,16 +441,14 @@ body{background:#0f1e2d;color:#e8f0f8}
       <p>Break into groups of 3. Take turns laying hands on each person. Ask God to fill them so that when they speak today, their words carry the very authority of God.</p>
     </div>
   </div>
+</div>
 
-  <!-- ═══════════════════════════════ SHARE ═══════════════════════════════ -->
-  <div style="background:var(--go);border-radius:14px;padding:16px 18px;margin:24px 0 14px;display:flex;align-items:center;gap:12px">
+<!-- SHARE -->
+<div class="screen" id="screen-share">
+  <div class="sec-hdr" style="background:var(--go)">
     <span style="font-size:28px">💬</span>
-    <div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Share</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">Gospel tools · Discipleship · Quick references</div>
-    </div>
+    <div><div class="sec-hdr-title">Share</div><div class="sec-hdr-sub">Gospel tools · Discipleship · Quick references</div></div>
   </div>
-
   <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">✝️</div><div class="rc-title">3 Circles Gospel Presentation</div>
     <div class="rc-desc">Visual gospel tool that crosses language barriers</div>
@@ -483,7 +475,6 @@ body{background:#0f1e2d;color:#e8f0f8}
       <p>You will offer a Jesus film to everyone you meet as a parting gift.</p>
     </div>
   </div>
-
   <div class="rc o" onclick="toggleRC(this)">
     <div class="rc-icon">🐑</div><div class="rc-title">Korban Quick Reference</div>
     <div class="rc-desc">Field card for the sacrifice bridge — use with Muslim neighbors</div>
@@ -504,12 +495,9 @@ body{background:#0f1e2d;color:#e8f0f8}
         <li>Isa Al Masih is that Korbani — sinless, chosen by God, raised from death</li>
         <li>Through Isa's Korbani, we can be forgiven and restored to God</li>
       </ul>
-      <h4>Watch Before Your Trip</h4>
-      <p>📺 <strong>youtube.com/watch?v=eB3XwF33v3Q</strong> — Example of the Korban presentation in action.</p>
       <div class="scr">"Behold, the Lamb of God, who takes away the sin of the world!" — John 1:29</div>
     </div>
   </div>
-
   <div class="rc i" onclick="toggleRC(this)">
     <div class="rc-icon">🏠</div><div class="rc-title">House of Peace Search — Luke 10</div>
     <div class="rc-desc">Finding Persons of Peace door-to-door</div>
@@ -542,7 +530,6 @@ body{background:#0f1e2d;color:#e8f0f8}
       </ul>
     </div>
   </div>
-
   <div class="rc" onclick="toggleRC(this)">
     <div class="rc-icon">📖</div><div class="rc-title">411 Discipleship Tool</div>
     <div class="rc-desc">4 questions · 1 paper · 1 hour — for new disciples</div>
@@ -573,40 +560,52 @@ body{background:#0f1e2d;color:#e8f0f8}
       </ul>
     </div>
   </div>
-
-  <!-- ═══════════════════════════════ CELEBRATE ═══════════════════════════════ -->
-  <div style="background:var(--gbj);border-radius:14px;padding:16px 18px;margin:24px 0 14px;display:flex;align-items:center;gap:12px">
-    <span style="font-size:28px">🎉</span>
-    <div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff">Celebrate</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,.75);font-weight:500">Track what God is doing</div>
-    </div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-    <button onclick="switchTab('log')" style="background:#fff;border:2px solid var(--gbj);border-radius:12px;padding:16px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.93)'" ontouchend="this.style.filter=''">
-      <span style="font-size:26px">📋</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gi)">Log Contact</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#7a8fa0;font-weight:500">New encounter</span>
-    </button>
-    <button onclick="switchTab('daily')" style="background:#fff;border:2px solid var(--gbj);border-radius:12px;padding:16px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.93)'" ontouchend="this.style.filter=''">
-      <span style="font-size:26px">📊</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gi)">Daily Tally</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:#7a8fa0;font-weight:500">Submit counts</span>
-    </button>
-  </div>
-  <button onclick="switchTab('summary');buildSummary()" style="background:#fff;border:2px solid var(--gbj);border-radius:12px;padding:16px;cursor:pointer;display:flex;align-items:center;gap:12px;width:100%;margin-bottom:24px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.93)'" ontouchend="this.style.filter=''">
-    <span style="font-size:26px">📈</span>
-    <div style="text-align:left">
-      <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--gi)">Weekly Summary</div>
-      <div style="font-family:'Montserrat',sans-serif;font-size:10px;color:#7a8fa0;font-weight:500">Totals, follow-ups &amp; full report</div>
-    </div>
-  </button>
-
 </div>
 
-<!-- LOG CONTACT -->
+<!-- CELEBRATE -->
+<div class="screen" id="screen-celebrate">
+  <div class="sec-hdr" style="background:var(--gbj)">
+    <span style="font-size:28px">🎉</span>
+    <div><div class="sec-hdr-title">Celebrate</div><div class="sec-hdr-sub">Track what God is doing this week</div></div>
+  </div>
+  <div class="sl" style="margin-top:4px">What would you like to do?</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <button onclick="switchTab('log')" style="background:var(--go);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">🔄</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Follow-Up</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Record a contact or encounter</span>
+    </button>
+    <button onclick="switchTab('tally')" style="background:var(--gi);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📊</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Daily Tally</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Submit today's counts</span>
+    </button>
+    <button onclick="switchTab('summary');buildSummary()" style="background:var(--gbj);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📈</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Summary</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Totals &amp; full report</span>
+    </button>
+    <button onclick="switchTab('feedback')" style="background:var(--gbl);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <span style="font-size:32px;line-height:1">📝</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Feedback</span>
+      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Post-trip survey</span>
+    </button>
+  </div>
+  <div class="sl" style="margin-top:28px">This Week's Counts</div>
+  <div class="sr">
+    <div class="sc"><div class="sv" id="stat-gospel2">0</div><div class="sk">Gospel</div></div>
+    <div class="sc"><div class="sv" id="stat-pop2">0</div><div class="sk">P.O.P.</div></div>
+    <div class="sc"><div class="sv" id="stat-prayer2">0</div><div class="sk">Prayer</div></div>
+    <div class="sc"><div class="sv" id="stat-salvation2">0</div><div class="sk">Decisions</div></div>
+  </div>
+</div>
+
+<!-- LOG CONTACT (sub-screen) -->
 <div class="screen" id="screen-log">
+  <div class="back-bar" onclick="switchTab('celebrate')">
+    <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <div><div class="back-bar-label">← Back to Celebrate</div><div class="back-bar-sub">Follow-Up</div></div>
+  </div>
   <div id="log-form-view">
     <div class="sl">New Contact / Encounter</div>
     <div class="card">
@@ -701,18 +700,37 @@ body{background:#0f1e2d;color:#e8f0f8}
   <div id="log-success-view" class="ss" style="display:none">
     <div class="ss-icon">✅</div>
     <div class="ss-title">Contact Saved!</div>
-    <div class="ss-sub">Saved for this week. Send your full summary to the team leader from the Summary tab anytime.</div>
+    <div class="ss-sub">Saved for this week. View your full summary from the Celebrate tab anytime.</div>
     <div style="margin-top:24px">
       <button class="bp" onclick="resetContactForm()">Log Another Contact</button>
-      <button class="bs" onclick="switchTab('daily')">Go to Daily Tally</button>
+      <button class="bs" onclick="switchTab('tally')">Go to Daily Tally</button>
+      <button class="bs" onclick="switchTab('celebrate')">Back to Celebrate</button>
     </div>
   </div>
   <div class="sl" style="margin-top:24px">Saved This Week</div>
   <div id="contact-list"></div>
 </div>
 
-<!-- DAILY TALLY -->
-<div class="screen" id="screen-daily">
+<!-- FEEDBACK (sub-screen) -->
+<div class="screen" id="screen-feedback">
+  <div class="back-bar" onclick="switchTab('celebrate')">
+    <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <div><div class="back-bar-label">← Back to Celebrate</div><div class="back-bar-sub">Feedback</div></div>
+  </div>
+  <div class="card" style="text-align:center;padding:36px 24px;border-left:4px solid var(--gbl)">
+    <div style="font-size:48px;margin-bottom:16px">📝</div>
+    <div style="font-size:17px;font-weight:700;color:var(--gi);margin-bottom:10px">Post-Trip Survey</div>
+    <div style="font-size:13px;color:#7a8fa0;line-height:1.7;margin-bottom:20px">Your feedback helps Global Gates improve every Sifting Week. The survey will be available here once your trip is complete.</div>
+    <div style="background:var(--gg);border-radius:var(--rs);padding:14px;font-size:12px;color:#7a8fa0;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Coming Soon</div>
+  </div>
+</div>
+
+<!-- DAILY TALLY (sub-screen) -->
+<div class="screen" id="screen-tally">
+  <div class="back-bar" onclick="switchTab('celebrate')">
+    <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <div><div class="back-bar-label">← Back to Celebrate</div><div class="back-bar-sub">Daily Tally</div></div>
+  </div>
   <div class="sl">Today's Counters</div>
   <div class="card">
     <div class="cr"><div><div class="cl">Doors Knocked</div><div class="cls">Total homes visited</div></div><div class="cc"><button class="cb m" onclick="AC('doors',-1)">−</button><div class="cv" id="cnt-doors">0</div><button class="cb p" onclick="AC('doors',1)">+</button></div></div>
@@ -761,29 +779,33 @@ body{background:#0f1e2d;color:#e8f0f8}
   <button class="bs" onclick="openEmailModal('tally')">📧 Send via Email Instead</button>
 </div>
 
-<!-- SUMMARY -->
+<!-- SUMMARY (sub-screen) -->
 <div class="screen" id="screen-summary">
+  <div class="back-bar" onclick="switchTab('celebrate')">
+    <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    <div><div class="back-bar-label">← Back to Celebrate</div><div class="back-bar-sub">Weekly Summary</div></div>
+  </div>
   <div id="summary-content"><div style="text-align:center;padding:40px;color:#a0b0c0;font-size:14px">Loading summary...</div></div>
 </div>
 
 </div><!-- /main -->
 
-<!-- TABS -->
+<!-- TAB BAR -->
 <div class="tabbar">
   <button class="tab-btn active" id="tab-home" onclick="switchTab('home')">
     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home
   </button>
-  <button class="tab-btn" id="tab-resources" onclick="switchTab('resources')">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Resources
+  <button class="tab-btn" id="tab-prepare" onclick="switchTab('prepare')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Prepare
   </button>
-  <button class="tab-btn" id="tab-log" onclick="switchTab('log')">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>Log
+  <button class="tab-btn" id="tab-pray" onclick="switchTab('pray')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>Pray
   </button>
-  <button class="tab-btn" id="tab-daily" onclick="switchTab('daily')">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Tally
+  <button class="tab-btn" id="tab-share" onclick="switchTab('share')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Share
   </button>
-  <button class="tab-btn" id="tab-summary" onclick="switchTab('summary');buildSummary()">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Summary
+  <button class="tab-btn" id="tab-celebrate" onclick="switchTab('celebrate')">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Celebrate
   </button>
 </div>
 
@@ -868,13 +890,15 @@ const ST8={
   contacts:[],emailType:'tally'
 };
 
+const CELEBRATE_SUBS=['log','tally','summary','feedback'];
+
 function loadState(){
   try{
     const s=JSON.parse(localStorage.getItem('gg_v3')||'{}');
-    if(s.cw) ST8.currentWeek=s.cw;
-    if(s.wks) ST8.weeks=s.wks;
-    if(s.cnt) ST8.counters=s.cnt;
-    if(s.con) ST8.contacts=s.con;
+    if(s.cw)ST8.currentWeek=s.cw;
+    if(s.wks)ST8.weeks=s.wks;
+    if(s.cnt)ST8.counters=s.cnt;
+    if(s.con)ST8.contacts=s.con;
     const to=localStorage.getItem('gg_et');const fr=localStorage.getItem('gg_ef');
     if(to)document.getElementById('email-to').value=to;
     if(fr)document.getElementById('email-from').value=fr;
@@ -889,7 +913,10 @@ function switchTab(tab){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('screen-'+tab).classList.add('active');
-  document.getElementById('tab-'+tab).classList.add('active');
+  const activeTabId=CELEBRATE_SUBS.includes(tab)?'tab-celebrate':'tab-'+tab;
+  const btn=document.getElementById(activeTabId);
+  if(btn)btn.classList.add('active');
+  window.scrollTo(0,0);
 }
 
 function toggleRC(card){card.querySelector('.rc-body').classList.toggle('open');}
@@ -904,10 +931,10 @@ function GS(gid){const s=document.querySelector('#'+gid+' .to.s');return s?s.get
 function AC(key,d){ST8.counters[key]=Math.max(0,(ST8.counters[key]||0)+d);updateCUI();updateStats();save();}
 function updateCUI(){for(const k in ST8.counters){const e=document.getElementById('cnt-'+k);if(e)e.textContent=ST8.counters[k];}}
 function updateStats(){
-  document.getElementById('stat-gospel').textContent=ST8.counters.gospel||0;
-  document.getElementById('stat-pop').textContent=ST8.counters.pop||0;
-  document.getElementById('stat-prayer').textContent=ST8.counters.prayer||0;
-  document.getElementById('stat-salvation').textContent=ST8.counters.salvations||0;
+  ['stat-gospel','stat-gospel2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.gospel||0;});
+  ['stat-pop','stat-pop2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.pop||0;});
+  ['stat-prayer','stat-prayer2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.prayer||0;});
+  ['stat-salvation','stat-salvation2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.salvations||0;});
 }
 
 function openWeekModal(){renderWL();document.getElementById('week-modal').classList.add('show');}
@@ -953,15 +980,15 @@ function submitContact(){
     prayerReq:gv('contact-prayer-req'),time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
     date:new Date().toLocaleDateString()};
   ST8.contacts.push(c);
-  if(c.happened==='shared-gospel') ST8.counters.gospel=(ST8.counters.gospel||0)+1;
-  if(c.happened==='prayed-together') ST8.counters.prayer=(ST8.counters.prayer||0)+1;
-  if(c.salvation==='yes') ST8.counters.salvations=(ST8.counters.salvations||0)+1;
-  if(c.popIndicators.length>=3) ST8.counters.pop=(ST8.counters.pop||0)+1;
+  if(c.happened==='shared-gospel')ST8.counters.gospel=(ST8.counters.gospel||0)+1;
+  if(c.happened==='prayed-together')ST8.counters.prayer=(ST8.counters.prayer||0)+1;
+  if(c.salvation==='yes')ST8.counters.salvations=(ST8.counters.salvations||0)+1;
+  if(c.popIndicators.length>=3)ST8.counters.pop=(ST8.counters.pop||0)+1;
   updateCUI();updateStats();save();
   document.getElementById('log-form-view').style.display='none';
   document.getElementById('log-success-view').style.display='block';
   renderContacts();
-  if(c.followup==='urgent') setTimeout(()=>showToast('⚡ URGENT — Call your team leader now!'),500);
+  if(c.followup==='urgent')setTimeout(()=>showToast('⚡ URGENT — Call your team leader now!'),500);
 }
 
 function resetContactForm(){
@@ -1057,7 +1084,7 @@ function buildSummary(){
   ${!wc.length?'<div style="text-align:center;padding:20px;color:#a0b0c0;font-size:13px">No contacts logged yet</div>':wc.map(x=>`<div class="ci"><div class="cd ${x.happened==='shared-gospel'?'dg':x.salvation==='yes'?'dpo':x.happened==='bible-study'?'dst':'dp'}"></div><div style="flex:1;min-width:0"><div class="cn">${x.name} ${x.salvation==='yes'?'🎉':''} ${x.popIndicators&&x.popIndicators.length>=3?"<span class='tag tg-gr'>POP</span>":''}</div><div class="cm">${x.date} ${x.time} · ${x.happened.replace(/-/g,' ')} · ${x.religion} ${x.lang?'('+x.lang+')':''}</div><div class="cm">${x.location||''} ${x.contactInfo?'· 📞 '+x.contactInfo:''}</div>${x.notes?`<div style="font-size:12px;color:#3d5068;margin-top:4px;line-height:1.5">${x.notes.substring(0,120)}${x.notes.length>120?'...':''}</div>`:''}</div></div>`).join('')}
   <div style="margin-top:16px">
     <button class="bp o" onclick="openEmailModal('tally')">📤 Email Full Report to Team</button>
-    <button class="bs" onclick="if(confirm('Clear all data for ${ST8.currentWeek.name}?')){ST8.contacts=ST8.contacts.filter(c=>c.week!==ST8.currentWeek.code);for(const k in ST8.counters)ST8.counters[k]=0;save();updateCUI();updateStats();renderContacts();buildSummary();showToast('Data cleared')}">🗑 Clear This Week's Data</button>
+    <button class="bs" onclick="if(confirm('Clear all data for this week?')){ST8.contacts=ST8.contacts.filter(c=>c.week!==ST8.currentWeek.code);for(const k in ST8.counters)ST8.counters[k]=0;save();updateCUI();updateStats();renderContacts();buildSummary();showToast('Data cleared')}">🗑 Clear This Week's Data</button>
   </div>`;
   document.getElementById('summary-content').innerHTML=html;
 }
