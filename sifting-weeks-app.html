@@ -9,6 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1B456A">
 <title>Global Gates — Sifting Week</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--gi:#1B456A;--gbj:#53B8F3;--go:#F38E53;--gg:#ECF1EE;--gbl:#3E67AC;--gid:#122f4a;--god:#d4703a;--gbl2:#e8f5fd;--r:12px;--rs:8px;--sh:0 2px 12px rgba(27,69,106,.12);--shl:0 6px 32px rgba(27,69,106,.18)}
@@ -174,6 +176,30 @@ body{background:#0f1e2d;color:#e8f0f8}
 </style>
 </head>
 <body>
+
+<!-- FIRST-VISIT GATE — shown until a valid code word is entered -->
+<div id="week-gate" style="display:none;position:fixed;inset:0;background:var(--gi);z-index:1000;overflow-y:auto;padding:40px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+  <div style="width:100%;max-width:420px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="width:64px;height:64px;background:rgba(255,255,255,.12);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px">🌍</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;color:#fff;margin-bottom:6px">Global Gates</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:13px;color:rgba(255,255,255,.65);font-weight:500">Sifting Week Field App</div>
+    </div>
+    <div style="background:rgba(255,255,255,.08);border-radius:16px;padding:24px 20px">
+      <div style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:4px">Enter Your Code Word</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.5">Your team leader will give you a code word before the week begins.</div>
+      <input type="text" id="gate-code-input"
+        placeholder="CODE WORD"
+        style="width:100%;padding:16px;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:20px;font-weight:700;color:#fff;letter-spacing:3px;text-align:center;text-transform:uppercase;outline:none;margin-bottom:12px;-webkit-appearance:none"
+        oninput="this.value=this.value.toUpperCase()"
+        onkeydown="if(event.key==='Enter')enterFromGate()">
+      <button onclick="enterFromGate()"
+        id="gate-btn"
+        style="width:100%;padding:15px;background:var(--go);border:none;border-radius:10px;font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:.5px;cursor:pointer;text-transform:uppercase">Enter</button>
+      <div id="gate-error" style="display:none;margin-top:12px;font-family:'Montserrat',sans-serif;font-size:12px;color:#ffb3a0;text-align:center;font-weight:600"></div>
+    </div>
+  </div>
+</div>
 
 <div class="topnav">
   <div class="topnav-brand">
@@ -809,19 +835,21 @@ body{background:#0f1e2d;color:#e8f0f8}
   </button>
 </div>
 
-<!-- WEEK MODAL -->
+<!-- WEEK MODAL (change week — intentional only) -->
 <div class="mo" id="week-modal">
   <div class="md">
     <div class="mh"></div>
-    <div class="mt">Select Your Week</div>
-    <p style="font-size:13px;color:#7a8fa0;margin-bottom:16px">Your team leader gives you a code word for each week. Enter it here — no date entry needed across sessions.</p>
-    <div class="fg"><label class="fl">Enter Code Word</label><input type="text" class="fi" id="week-code-input" placeholder="e.g. HARVEST25, GATEWAY, NYCDEC..." style="text-transform:uppercase"></div>
-    <button class="bp" onclick="setWeekFromCode()" style="margin-bottom:16px">Set This Week</button>
-    <div class="div"></div>
-    <div class="fl" style="margin-bottom:10px">Saved Weeks</div>
-    <div id="week-list"></div>
-    <div style="margin-top:12px"><button class="bs" onclick="addNewWeek()">+ Add New Week</button></div>
-    <div style="margin-top:8px"><button class="bs" onclick="closeModal('week-modal')">Done</button></div>
+    <div class="mt">Change Week</div>
+    <p style="font-size:13px;color:#7a8fa0;margin-bottom:6px">Enter a new code word from your team leader to switch weeks.</p>
+    <div style="background:#fff8f4;border:1.5px solid rgba(243,142,83,.4);border-radius:var(--rs);padding:10px 14px;margin-bottom:16px;font-size:12px;color:#b05a20;font-weight:600">
+      ⚠️ Current week: <span id="modal-current-week-code"></span> — only change this if your leader gave you a new code word.
+    </div>
+    <div class="fg">
+      <label class="fl">New Code Word</label>
+      <input type="text" class="fi" id="week-code-input" placeholder="Enter code word..." style="text-transform:uppercase;font-size:18px;font-weight:700;letter-spacing:2px;text-align:center">
+    </div>
+    <button class="bp" onclick="setWeekFromCode()" style="margin-bottom:12px">Switch to This Week</button>
+    <button class="bs" onclick="closeModal('week-modal')">Cancel — Keep Current Week</button>
   </div>
 </div>
 
@@ -868,6 +896,20 @@ body{background:#0f1e2d;color:#e8f0f8}
 <div class="toast" id="toast"></div>
 
 <script>
+window.addEventListener('DOMContentLoaded', function() {
+// ─── Firebase Init ───────────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyC9fQikLwGNo7WYQ-8Ch1VA9v7HrDzXH3I",
+  authDomain: "gg-sifting-admin.firebaseapp.com",
+  projectId: "gg-sifting-admin",
+  storageBucket: "gg-sifting-admin.firebasestorage.app",
+  messagingSenderId: "440903094020",
+  appId: "1:440903094020:web:26c982cb7e443c1bac4a51"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ─── Prayer Guide Data ───────────────────────────────────────────────────────
 const PD=[
   {t:'Vision for the Lost',v:'Matthew 9:36–38',pts:['Pray that God would break your heart for people far from Him','Pray for laborers — ask God to send more workers into this harvest','Ask God to give you His eyes to see the spiritual need around you']},
   {t:'Spiritual Preparation',v:'Ephesians 6:10–18',pts:['Pray on the full armor of God — go through each piece today','Pray against forces that blind people to the gospel','Ask for boldness and clear speech to proclaim Christ']},
@@ -883,15 +925,18 @@ const PD=[
   {t:'For Your Return Home',v:'Matthew 28:19–20',pts:["Pray what God does in you this week continues when you return home","Ask God to show you 1–2 people in your own life to share with","Pray you would train others in what you've learned — multiplying the work"]},
 ];
 
+// ─── App State ───────────────────────────────────────────────────────────────
 const ST8={
-  currentWeek:{name:'Sifting Week',code:'SIFTING'},
+  currentWeek:{name:'Sifting Week',code:'SIFTING',followUpRecipients:[]},
   weeks:[{name:'Summer 2025',code:'SUMMER25'},{name:'Fall 2025',code:'FALL25'},{name:'Spring 2026',code:'SPRING26'}],
   counters:{doors:0,gospel:0,prayer:0,pop:0,films:0,studies:0,salvations:0},
-  contacts:[],emailType:'tally'
+  contacts:[],
+  emailType:'tally'
 };
 
 const CELEBRATE_SUBS=['log','tally','summary','feedback'];
 
+// ─── Persistence ─────────────────────────────────────────────────────────────
 function loadState(){
   try{
     const s=JSON.parse(localStorage.getItem('gg_v3')||'{}');
@@ -899,16 +944,23 @@ function loadState(){
     if(s.wks)ST8.weeks=s.wks;
     if(s.cnt)ST8.counters=s.cnt;
     if(s.con)ST8.contacts=s.con;
-    const to=localStorage.getItem('gg_et');const fr=localStorage.getItem('gg_ef');
+    const to=localStorage.getItem('gg_et');
+    const fr=localStorage.getItem('gg_ef');
     if(to)document.getElementById('email-to').value=to;
     if(fr)document.getElementById('email-from').value=fr;
   }catch(e){}
   updateNav();updateCUI();updateStats();renderContacts();buildPG();
 }
+
 function save(){
-  try{localStorage.setItem('gg_v3',JSON.stringify({cw:ST8.currentWeek,wks:ST8.weeks,cnt:ST8.counters,con:ST8.contacts}));}catch(e){}
+  try{
+    localStorage.setItem('gg_v3',JSON.stringify({
+      cw:ST8.currentWeek,wks:ST8.weeks,cnt:ST8.counters,con:ST8.contacts
+    }));
+  }catch(e){}
 }
 
+// ─── Navigation ──────────────────────────────────────────────────────────────
 function switchTab(tab){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -919,17 +971,39 @@ function switchTab(tab){
   window.scrollTo(0,0);
 }
 
+// ─── UI Helpers ──────────────────────────────────────────────────────────────
 function toggleRC(card){card.querySelector('.rc-body').classList.toggle('open');}
 function toggleCheck(item){
   const b=item.querySelector('.chb'),t=item.querySelector('.cht');
   b.classList.toggle('ck');t.classList.toggle('ck');
   b.innerHTML=b.classList.contains('ck')?'<svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':'';
 }
-function ST(el,gid){document.getElementById(gid).querySelectorAll('.to').forEach(o=>o.classList.remove('s'));el.classList.add('s');}
-function GS(gid){const s=document.querySelector('#'+gid+' .to.s');return s?s.getAttribute('data-val'):'';}
+function ST(el,gid){
+  document.getElementById(gid).querySelectorAll('.to').forEach(o=>o.classList.remove('s'));
+  el.classList.add('s');
+}
+function GS(gid){
+  const s=document.querySelector('#'+gid+' .to.s');
+  return s?s.getAttribute('data-val'):'';
+}
+function gv(id){return document.getElementById(id)?.value?.trim()||'';}
+function getCheckedTexts(cid){
+  const r=[];
+  document.querySelectorAll('#'+cid+' .chb.ck').forEach(b=>r.push(b.nextElementSibling.textContent.trim()));
+  return r;
+}
 
-function AC(key,d){ST8.counters[key]=Math.max(0,(ST8.counters[key]||0)+d);updateCUI();updateStats();save();}
-function updateCUI(){for(const k in ST8.counters){const e=document.getElementById('cnt-'+k);if(e)e.textContent=ST8.counters[k];}}
+// ─── Counters ────────────────────────────────────────────────────────────────
+function AC(key,d){
+  ST8.counters[key]=Math.max(0,(ST8.counters[key]||0)+d);
+  updateCUI();updateStats();save();
+}
+function updateCUI(){
+  for(const k in ST8.counters){
+    const e=document.getElementById('cnt-'+k);
+    if(e)e.textContent=ST8.counters[k];
+  }
+}
 function updateStats(){
   ['stat-gospel','stat-gospel2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.gospel||0;});
   ['stat-pop','stat-pop2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.pop||0;});
@@ -937,72 +1011,279 @@ function updateStats(){
   ['stat-salvation','stat-salvation2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=ST8.counters.salvations||0;});
 }
 
-function openWeekModal(){renderWL();document.getElementById('week-modal').classList.add('show');}
-function renderWL(){
-  document.getElementById('week-list').innerHTML=ST8.weeks.map((w,i)=>`
-    <div class="wpi ${w.code===ST8.currentWeek.code?'aw':''}" onclick="selWeek(${i})">
-      <div><div class="wpn">${w.name}</div><div class="wpc">Code: ${w.code}</div></div>
-      ${w.code===ST8.currentWeek.code?'<svg width="18" height="18" fill="none" stroke="var(--gbj)" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':''}
-    </div>`).join('');
-}
-function selWeek(i){ST8.currentWeek=ST8.weeks[i];updateNav();save();renderWL();showToast('Week: '+ST8.currentWeek.name);}
-function setWeekFromCode(){
-  const code=document.getElementById('week-code-input').value.trim().toUpperCase();
-  if(!code){showToast('Enter a code word');return;}
-  const ex=ST8.weeks.find(w=>w.code===code);
-  if(ex){selWeek(ST8.weeks.indexOf(ex));}
-  else{ST8.weeks.unshift({name:'Week '+code,code});ST8.currentWeek=ST8.weeks[0];updateNav();save();renderWL();showToast('New week: '+code);}
-  document.getElementById('week-code-input').value='';
-}
-function addNewWeek(){
-  const n=prompt('Week name:');if(!n)return;
-  const c=prompt('Code word:');if(!c)return;
-  ST8.weeks.unshift({name:n,code:c.toUpperCase()});ST8.currentWeek=ST8.weeks[0];updateNav();save();renderWL();showToast('Week added!');
-}
+// ─── Nav Display ─────────────────────────────────────────────────────────────
 function updateNav(){
   document.getElementById('nav-week-name').textContent=ST8.currentWeek.name;
   document.getElementById('nav-week-code').textContent=ST8.currentWeek.code;
 }
 
-function getCheckedTexts(cid){
-  const r=[];document.querySelectorAll('#'+cid+' .chb.ck').forEach(b=>r.push(b.nextElementSibling.textContent.trim()));return r;
+// ─── Week Modal ──────────────────────────────────────────────────────────────
+function openWeekModal(){
+  document.getElementById('modal-current-week-code').textContent=ST8.currentWeek.code;
+  document.getElementById('week-code-input').value='';
+  document.getElementById('week-modal').classList.add('show');
 }
-function gv(id){return document.getElementById(id)?.value?.trim()||'';}
 
+// renderWL and selWeek removed — no week list UI in this version
+
+
+
+// ─── Gate Entry (first visit) ─────────────────────────────────────────────────
+// Called from the full-screen gate overlay. Same Firestore lookup as
+// setWeekFromCode but controls the gate dismissal instead of the modal.
+async function enterFromGate(){
+  const code=document.getElementById('gate-code-input').value.trim().toUpperCase();
+  const errEl=document.getElementById('gate-error');
+  const btn=document.getElementById('gate-btn');
+  errEl.style.display='none';
+
+  if(!code){
+    errEl.textContent='Please enter your code word.';
+    errEl.style.display='block';
+    return;
+  }
+
+  btn.textContent='Checking...';
+  btn.disabled=true;
+
+  try{
+    const snap=await db.collection('weeks').where('codeWord','==',code).limit(1).get();
+
+    if(!snap.empty){
+      const data=snap.docs[0].data();
+      const weekId=snap.docs[0].id;
+      const weekObj={
+        id:weekId,code,
+        name:data.label||data.name||('Week '+code),
+        city:data.city||'',region:data.region||'',
+        startDate:data.startDate||null,endDate:data.endDate||null,
+        status:data.status||'active',
+        followUpRecipients:data.followUpRecipients||[],
+        fromFirestore:true
+      };
+      const primary=(data.followUpRecipients||[]).find(r=>r.primary)||data.followUpRecipients?.[0];
+      if(primary?.email){
+        document.getElementById('email-to').value=primary.email;
+        localStorage.setItem('gg_et',primary.email);
+      }
+      ST8.currentWeek=weekObj;
+      // Keep weeks array to one entry — the current week only
+      ST8.weeks=[weekObj];
+      save();
+      updateNav();
+      dismissGate();
+    }else{
+      // Code word not in Firestore — allow entry but flag it
+      // This supports teams running offline/v1.0 fallback
+      const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
+      ST8.currentWeek=weekObj;
+      ST8.weeks=[weekObj];
+      save();
+      updateNav();
+      dismissGate();
+      showToast('Week set (offline mode)');
+    }
+  }catch(err){
+    console.warn('Gate Firestore error:',err.message);
+    // Network failure — let them in with a local stub
+    const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
+    ST8.currentWeek=weekObj;
+    ST8.weeks=[weekObj];
+    save();
+    updateNav();
+    dismissGate();
+    showToast('Saved locally — no connection');
+  }finally{
+    btn.textContent='Enter';
+    btn.disabled=false;
+  }
+}
+
+function dismissGate(){
+  const gate=document.getElementById('week-gate');
+  gate.style.opacity='0';
+  gate.style.transition='opacity .3s';
+  setTimeout(()=>{gate.style.display='none';},300);
+}
+
+// ─── Change Week (intentional — from nav badge) ───────────────────────────────
+// Same Firestore lookup but updates current week in place.
+// Requires deliberate code word entry — no list, no suggestions.
+async function setWeekFromCode(){
+  const code=document.getElementById('week-code-input').value.trim().toUpperCase();
+  if(!code){showToast('Enter a code word');return;}
+
+  const btn=document.querySelector('#week-modal .bp');
+  const originalText=btn.textContent;
+  btn.textContent='Checking...';
+  btn.disabled=true;
+
+  try{
+    const snap=await db.collection('weeks').where('codeWord','==',code).limit(1).get();
+
+    if(!snap.empty){
+      const data=snap.docs[0].data();
+      const weekId=snap.docs[0].id;
+      const weekObj={
+        id:weekId,code,
+        name:data.label||data.name||('Week '+code),
+        city:data.city||'',region:data.region||'',
+        startDate:data.startDate||null,endDate:data.endDate||null,
+        status:data.status||'active',
+        followUpRecipients:data.followUpRecipients||[],
+        fromFirestore:true
+      };
+      const primary=(data.followUpRecipients||[]).find(r=>r.primary)||data.followUpRecipients?.[0];
+      if(primary?.email){
+        document.getElementById('email-to').value=primary.email;
+        localStorage.setItem('gg_et',primary.email);
+      }
+      ST8.currentWeek=weekObj;
+      ST8.weeks=[weekObj];
+      save();updateNav();
+      closeModal('week-modal');
+      showToast('✅ Switched to: '+weekObj.name);
+    }else{
+      const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
+      ST8.currentWeek=weekObj;
+      ST8.weeks=[weekObj];
+      save();updateNav();
+      closeModal('week-modal');
+      showToast('Week set (offline mode): '+code);
+    }
+  }catch(err){
+    console.warn('Firestore error:',err.message);
+    const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
+    ST8.currentWeek=weekObj;
+    ST8.weeks=[weekObj];
+    save();updateNav();
+    closeModal('week-modal');
+    showToast('Saved locally (no connection)');
+  }finally{
+    btn.textContent=originalText;
+    btn.disabled=false;
+  }
+}
+
+// ─── Contact Submit → localStorage + Firestore ───────────────────────────────
+// Saves contact locally first (instant), then writes to Firestore in background.
+// If Firestore write fails, contact is still saved locally — no data loss.
 function submitContact(){
   const name=gv('contact-name')||'Unnamed person';
-  const happened=GS('what-happened');if(!happened){showToast('Select what happened');return;}
-  const c={id:Date.now(),week:ST8.currentWeek.code,name,type:GS('encounter-type'),religion:GS('religion'),
-    lang:gv('contact-lang'),gender:GS('gender'),happened,response:GS('response'),salvation:GS('salvation'),
-    popIndicators:getCheckedTexts('pop-checklist'),scripture:gv('contact-scripture'),family:gv('contact-family'),
-    location:gv('contact-location'),contactInfo:gv('contact-info'),followupTime:gv('contact-followup-time'),
-    followup:GS('followup-needed'),atmosphere:gv('contact-atmosphere'),notes:gv('contact-notes'),
-    prayerReq:gv('contact-prayer-req'),time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
-    date:new Date().toLocaleDateString()};
+  const happened=GS('what-happened');
+  if(!happened){showToast('Select what happened');return;}
+
+  const c={
+    id: Date.now(),
+    week: ST8.currentWeek.code,
+    weekId: ST8.currentWeek.id||null,
+    name,
+    type: GS('encounter-type'),
+    religion: GS('religion'),
+    lang: gv('contact-lang'),
+    gender: GS('gender'),
+    happened,
+    response: GS('response'),
+    salvation: GS('salvation'),
+    popIndicators: getCheckedTexts('pop-checklist'),
+    scripture: gv('contact-scripture'),
+    family: gv('contact-family'),
+    location: gv('contact-location'),
+    contactInfo: gv('contact-info'),
+    followupTime: gv('contact-followup-time'),
+    followup: GS('followup-needed'),
+    atmosphere: gv('contact-atmosphere'),
+    notes: gv('contact-notes'),
+    prayerReq: gv('contact-prayer-req'),
+    time: new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    date: new Date().toLocaleDateString(),
+    // Snapshot follow-up recipients at submit time (not a live reference)
+    followUpSentTo: ST8.currentWeek.followUpRecipients||[]
+  };
+
+  // 1. Save locally first — always works, even offline
   ST8.contacts.push(c);
   if(c.happened==='shared-gospel')ST8.counters.gospel=(ST8.counters.gospel||0)+1;
   if(c.happened==='prayed-together')ST8.counters.prayer=(ST8.counters.prayer||0)+1;
   if(c.salvation==='yes')ST8.counters.salvations=(ST8.counters.salvations||0)+1;
   if(c.popIndicators.length>=3)ST8.counters.pop=(ST8.counters.pop||0)+1;
   updateCUI();updateStats();save();
+
+  // 2. Show success immediately — don't wait for Firestore
   document.getElementById('log-form-view').style.display='none';
   document.getElementById('log-success-view').style.display='block';
   renderContacts();
   if(c.followup==='urgent')setTimeout(()=>showToast('⚡ URGENT — Call your team leader now!'),500);
+
+  // 3. Write to Firestore in background (non-blocking)
+  saveContactToFirestore(c);
 }
 
+async function saveContactToFirestore(c){
+  try{
+    // Build the Firestore document — matches the contacts collection schema
+    const fsDoc={
+      weekId: c.weekId||null,
+      codeWord: c.week,
+      submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      name: c.name,
+      language: c.lang||'',
+      religion: c.religion||'',
+      gender: c.gender||'',
+      encounterType: c.type||'',
+      neighborhood: c.location||'',
+      phone: c.contactInfo||'',
+      gospelShared: c.happened==='shared-gospel',
+      prayedWith: c.happened==='prayed-together'||c.salvation==='yes',
+      salvation: c.salvation||'no',
+      gospelResponse: c.response||'',
+      interestedInBible: c.popIndicators.includes('Committed to a follow-up meeting'),
+      followUpRequested: c.followup!=='no',
+      followUpPriority: c.followup||'no',
+      followUpTime: c.followupTime||'',
+      popIndicators: c.popIndicators,
+      scripture: c.scripture||'',
+      family: c.family||'',
+      atmosphere: c.atmosphere||'',
+      notes: c.notes||'',
+      prayerRequests: c.prayerReq||'',
+      // Snapshot of who should receive follow-up alerts — never a live reference
+      followUpSentTo: c.followUpSentTo,
+      // Client-side timestamp for display
+      clientDate: c.date,
+      clientTime: c.time,
+      // Local ID for deduplication if we ever need to sync later
+      localId: String(c.id)
+    };
+    await db.collection('contacts').add(fsDoc);
+    console.log('Contact saved to Firestore');
+  }catch(err){
+    // Silent fail — contact is already saved locally, nothing is lost
+    console.warn('Firestore write failed (contact saved locally):', err.message);
+  }
+}
+
+// ─── Contact Form Reset ───────────────────────────────────────────────────────
 function resetContactForm(){
   document.getElementById('log-form-view').style.display='block';
   document.getElementById('log-success-view').style.display='none';
   ['contact-name','contact-lang','contact-scripture','contact-family','contact-location',
-   'contact-info','contact-followup-time','contact-atmosphere','contact-notes','contact-prayer-req'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.querySelectorAll('#log-form-view .chb.ck').forEach(b=>{b.classList.remove('ck');b.innerHTML='';b.nextElementSibling.classList.remove('ck');});
+   'contact-info','contact-followup-time','contact-atmosphere','contact-notes','contact-prayer-req'
+  ].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.querySelectorAll('#log-form-view .chb.ck').forEach(b=>{
+    b.classList.remove('ck');b.innerHTML='';
+    b.nextElementSibling.classList.remove('ck');
+  });
 }
 
+// ─── Contact List ─────────────────────────────────────────────────────────────
 function renderContacts(){
   const list=document.getElementById('contact-list');
   const wc=ST8.contacts.filter(c=>c.week===ST8.currentWeek.code);
-  if(!wc.length){list.innerHTML='<div style="font-size:13px;color:#a0b0c0;text-align:center;padding:16px">No contacts logged yet this week</div>';return;}
+  if(!wc.length){
+    list.innerHTML='<div style="font-size:13px;color:#a0b0c0;text-align:center;padding:16px">No contacts logged yet this week</div>';
+    return;
+  }
   const dc={gospel:'dg',prayer:'dp','prayed-together':'dp','shared-gospel':'dg','bible-study':'dst','gave-film':'dp','offered-prayer':'dp','prayer-only':'dp'};
   list.innerHTML=wc.slice().reverse().map(c=>`
     <div class="ci">
@@ -1016,11 +1297,13 @@ function renderContacts(){
     </div>`).join('');
 }
 
+// ─── Tally Submit ─────────────────────────────────────────────────────────────
 function submitTally(){
   if(!gv('tally-team')){showToast('Please enter your team name');return;}
   openEmailModal('tally');
 }
 
+// ─── Email Modal ──────────────────────────────────────────────────────────────
 function openEmailModal(type){
   ST8.emailType=type;
   localStorage.setItem('gg_et',document.getElementById('email-to').value);
@@ -1047,12 +1330,15 @@ function buildEmailBody(type){
 function sendEmail(){
   const to=document.getElementById('email-to').value.trim();
   if(!to){showToast('Enter an email address');return;}
-  localStorage.setItem('gg_et',to);localStorage.setItem('gg_ef',document.getElementById('email-from').value);
+  localStorage.setItem('gg_et',to);
+  localStorage.setItem('gg_ef',document.getElementById('email-from').value);
   const subj=ST8.emailType==='tally'?`GG Daily Tally — ${ST8.currentWeek.code} Day ${GS('sifting-day')||'?'}`:`GG Contact Report — ${ST8.currentWeek.code}`;
   window.location.href=`mailto:${to}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(buildEmailBody(ST8.emailType))}`;
-  closeModal('email-modal');showToast('Opening email app...');
+  closeModal('email-modal');
+  showToast('Opening email app...');
 }
 
+// ─── Summary ──────────────────────────────────────────────────────────────────
 function buildSummary(){
   const wc=ST8.contacts.filter(c=>c.week===ST8.currentWeek.code);
   const c=ST8.counters;
@@ -1089,6 +1375,7 @@ function buildSummary(){
   document.getElementById('summary-content').innerHTML=html;
 }
 
+// ─── Prayer Guide ─────────────────────────────────────────────────────────────
 function buildPG(){
   const today=new Date().getDay();
   document.getElementById('prayer-guide-container').innerHTML=PD.map((d,i)=>`
@@ -1105,20 +1392,41 @@ function buildPG(){
     </div>`).join('');
 }
 
+// ─── Modals / Toast ───────────────────────────────────────────────────────────
 function closeModal(id){document.getElementById(id).classList.remove('show');}
-document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show');}));
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',function(e){
+  if(e.target===this)this.classList.remove('show');
+}));
 function showInstall(){document.getElementById('install-modal').classList.add('show');}
-
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
+// ─── Boot ─────────────────────────────────────────────────────────────────────
 loadState();
 if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){
   document.getElementById('install-banner-wrap').style.display='none';
 }
+
+// Show the full-screen gate if no week has been set yet.
+// A week is considered "set" if currentWeek has a real code (not the default stub).
+// On return visits the gate is skipped entirely.
+(function checkGate(){
+  const hasWeek = ST8.currentWeek &&
+                  ST8.currentWeek.code &&
+                  ST8.currentWeek.code !== 'SIFTING';
+  if(!hasWeek){
+    document.getElementById('week-gate').style.display='flex';
+    setTimeout(()=>{
+      const input=document.getElementById('gate-code-input');
+      if(input)input.focus();
+    },300);
+  }
+})();
+
+}); // end DOMContentLoaded
 </script>
 </body>
 </html>
