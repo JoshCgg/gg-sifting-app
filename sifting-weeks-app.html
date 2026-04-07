@@ -9,8 +9,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1B456A">
 <title>Global Gates — Sifting Week</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--gi:#1B456A;--gbj:#53B8F3;--go:#F38E53;--gg:#ECF1EE;--gbl:#3E67AC;--gid:#122f4a;--god:#d4703a;--gbl2:#e8f5fd;--r:12px;--rs:8px;--sh:0 2px 12px rgba(27,69,106,.12);--shl:0 6px 32px rgba(27,69,106,.18)}
@@ -895,9 +893,11 @@ body{background:#0f1e2d;color:#e8f0f8}
 
 <div class="toast" id="toast"></div>
 
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-// ─── Firebase Init ───────────────────────────────────────────────────────────
+<script type="module">
+// ─── Firebase Init (ES module — no CDN script tags needed) ───────────────────
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, query, where, limit, getDocs, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
 const firebaseConfig = {
   apiKey: "AIzaSyC9fQikLwGNo7WYQ-8Ch1VA9v7HrDzXH3I",
   authDomain: "gg-sifting-admin.firebaseapp.com",
@@ -906,8 +906,26 @@ const firebaseConfig = {
   messagingSenderId: "440903094020",
   appId: "1:440903094020:web:26c982cb7e443c1bac4a51"
 };
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Expose db and Firestore helpers to global scope so non-module functions can use them
+window._db = db;
+window._fsHelpers = { collection, query, where, limit, getDocs, addDoc, serverTimestamp };
+
+// Boot
+loadState();
+if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){
+  document.getElementById('install-banner-wrap').style.display='none';
+}
+(function checkGate(){
+  const hasWeek=ST8.currentWeek&&ST8.currentWeek.code&&ST8.currentWeek.code!=='SIFTING';
+  if(!hasWeek){
+    document.getElementById('week-gate').style.display='flex';
+    setTimeout(()=>{const input=document.getElementById('gate-code-input');if(input)input.focus();},300);
+  }
+})();
 
 // ─── Prayer Guide Data ───────────────────────────────────────────────────────
 const PD=[
@@ -1047,7 +1065,9 @@ async function enterFromGate(){
   btn.disabled=true;
 
   try{
-    const snap=await db.collection('weeks').where('codeWord','==',code).limit(1).get();
+    const {collection,query,where,limit,getDocs}=window._fsHelpers;
+    const q=query(collection(window._db,'weeks'),where('codeWord','==',code),limit(1));
+    const snap=await getDocs(q);
 
     if(!snap.empty){
       const data=snap.docs[0].data();
@@ -1067,14 +1087,11 @@ async function enterFromGate(){
         localStorage.setItem('gg_et',primary.email);
       }
       ST8.currentWeek=weekObj;
-      // Keep weeks array to one entry — the current week only
       ST8.weeks=[weekObj];
       save();
       updateNav();
       dismissGate();
     }else{
-      // Code word not in Firestore — allow entry but flag it
-      // This supports teams running offline/v1.0 fallback
       const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
       ST8.currentWeek=weekObj;
       ST8.weeks=[weekObj];
@@ -1085,7 +1102,6 @@ async function enterFromGate(){
     }
   }catch(err){
     console.warn('Gate Firestore error:',err.message);
-    // Network failure — let them in with a local stub
     const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
     ST8.currentWeek=weekObj;
     ST8.weeks=[weekObj];
@@ -1119,7 +1135,9 @@ async function setWeekFromCode(){
   btn.disabled=true;
 
   try{
-    const snap=await db.collection('weeks').where('codeWord','==',code).limit(1).get();
+    const {collection,query,where,limit,getDocs}=window._fsHelpers;
+    const q=query(collection(window._db,'weeks'),where('codeWord','==',code),limit(1));
+    const snap=await getDocs(q);
 
     if(!snap.empty){
       const data=snap.docs[0].data();
@@ -1221,11 +1239,11 @@ function submitContact(){
 
 async function saveContactToFirestore(c){
   try{
-    // Build the Firestore document — matches the contacts collection schema
+    const {collection,addDoc,serverTimestamp}=window._fsHelpers;
     const fsDoc={
       weekId: c.weekId||null,
       codeWord: c.week,
-      submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      submittedAt: serverTimestamp(),
       name: c.name,
       language: c.lang||'',
       religion: c.religion||'',
@@ -1255,7 +1273,7 @@ async function saveContactToFirestore(c){
       // Local ID for deduplication if we ever need to sync later
       localId: String(c.id)
     };
-    await db.collection('contacts').add(fsDoc);
+    await addDoc(collection(window._db,'contacts'),fsDoc);
     console.log('Contact saved to Firestore');
   }catch(err){
     // Silent fail — contact is already saved locally, nothing is lost
@@ -1404,29 +1422,6 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-loadState();
-if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone){
-  document.getElementById('install-banner-wrap').style.display='none';
-}
-
-// Show the full-screen gate if no week has been set yet.
-// A week is considered "set" if currentWeek has a real code (not the default stub).
-// On return visits the gate is skipped entirely.
-(function checkGate(){
-  const hasWeek = ST8.currentWeek &&
-                  ST8.currentWeek.code &&
-                  ST8.currentWeek.code !== 'SIFTING';
-  if(!hasWeek){
-    document.getElementById('week-gate').style.display='flex';
-    setTimeout(()=>{
-      const input=document.getElementById('gate-code-input');
-      if(input)input.focus();
-    },300);
-  }
-})();
-
-}); // end DOMContentLoaded
 </script>
 </body>
 </html>
