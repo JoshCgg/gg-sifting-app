@@ -746,8 +746,7 @@ body{background:#0f1e2d;color:#e8f0f8}
   <div class="card" style="text-align:center;padding:36px 24px;border-left:4px solid var(--gbl)">
     <div style="font-size:48px;margin-bottom:16px">📝</div>
     <div style="font-size:17px;font-weight:700;color:var(--gi);margin-bottom:10px">Post-Trip Survey</div>
-    <div style="font-size:13px;color:#7a8fa0;line-height:1.7;margin-bottom:20px">Your feedback helps Global Gates improve every Sifting Week. The survey will be available here once your trip is complete.</div>
-    <div style="background:var(--gg);border-radius:var(--rs);padding:14px;font-size:12px;color:#7a8fa0;font-weight:600;letter-spacing:.5px;text-transform:uppercase">Coming Soon</div>
+    <div style="font-size:13px;color:#7a8fa0;line-height:1.7;margin-bottom:20px">Your feedback helps Global Gates improve every Sifting Week.</div>
   </div>
 </div>
 
@@ -984,6 +983,7 @@ function switchTab(tab){
 }
 
 function handleFollowUpTap(){
+  console.log('currentWeek:', JSON.stringify(ST8.currentWeek));
   var w=ST8.currentWeek;
   if(w&&w.followUpMode==='link'&&w.followUpFormUrl){
     window.open(w.followUpFormUrl,'_blank');
