@@ -1172,13 +1172,13 @@ async function enterFromGate(){
       if(primary?.email){document.getElementById('email-to').value=primary.email;localStorage.setItem('gg_et',primary.email);}
       ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();updateNav();dismissGate();
     }else{
-      const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
-      ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();updateNav();dismissGate();showToast('Week set (offline mode)');
+      errEl.textContent='Code word not found. Please check with your team leader.';
+      errEl.style.display='block';
     }
   }catch(err){
     console.warn('Gate error:',err.message);
-    const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
-    ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();updateNav();dismissGate();showToast('Saved locally — no connection');
+    errEl.textContent='Could not connect. Check your internet and try again.';
+    errEl.style.display='block';
   }finally{btn.textContent='Enter';btn.disabled=false;}
 }
 
@@ -1204,12 +1204,10 @@ async function setWeekFromCode(){
       if(primary?.email){document.getElementById('email-to').value=primary.email;localStorage.setItem('gg_et',primary.email);}
       ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();updateNav();closeModal('week-modal');showToast('✅ Switched to: '+weekObj.name);
     }else{
-      const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
-      ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();updateNav();closeModal('week-modal');showToast('Week set (offline mode): '+code);
+      showToast('Code word not found. Check with your team leader.');
     }
   }catch(err){
-    const weekObj={code,name:'Week '+code,followUpRecipients:[],fromFirestore:false};
-    ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();updateNav();closeModal('week-modal');showToast('Saved locally (no connection)');
+    showToast('Could not connect. Check your internet and try again.');
   }finally{btn.textContent=orig;btn.disabled=false;}
 }
 
