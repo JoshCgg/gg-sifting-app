@@ -170,6 +170,12 @@ body{font-family:'Montserrat',sans-serif;background:var(--bright-gray);color:var
 .header-row2{display:flex;flex-direction:column;align-items:flex-start}
 .header-week-label{font-size:9px;text-transform:uppercase;color:rgba(255,255,255,0.5);font-family:var(--font-body);letter-spacing:0.08em}
 .header-week-name{font-size:16px;font-weight:700;color:#fff;font-family:var(--font-display);text-transform:uppercase;letter-spacing:0.04em}
+.tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;margin-bottom:0}
+.tile{border:none;border-radius:16px;padding:16px;min-height:110px;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;position:relative;transition:filter .1s}
+.tile:active{filter:brightness(.9)}
+.tile-icon{position:absolute;top:16px;left:16px;width:24px;height:24px}
+.tile-label{font-family:var(--font-display);font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.tile-sub{font-family:var(--font-body);font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
 @media(prefers-color-scheme:dark){
 body{background:#0f1e2d;color:#e8f0f8}
 .topnav{background:#0a1520}
@@ -256,26 +262,26 @@ body{background:#0f1e2d;color:#e8f0f8}
     <div class="sc"><div class="sv" id="stat-salvation">0</div><div class="sk">Decisions</div></div>
   </div>
   <div class="sl">What would you like to do?</div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-    <button onclick="switchTab('prepare')" style="background:var(--gi);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
-      <span style="font-size:32px;line-height:1">📖</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Prepare</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Pre-trip &amp; training</span>
+  <div class="tile-grid">
+    <button class="tile" style="background:var(--indigo)" onclick="switchTab('prepare')" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <div class="tile-label">Prepare</div>
+      <div class="tile-sub">Before you go</div>
     </button>
-    <button onclick="switchTab('pray')" style="background:var(--gbl);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
-      <span style="font-size:32px;line-height:1">🙏</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Pray</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Prayer &amp; walking guides</span>
+    <button class="tile" style="background:var(--blue-jeans)" onclick="switchTab('pray')" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v4l3 3"/></svg>
+      <div class="tile-label" style="color:var(--indigo)">Pray</div>
+      <div class="tile-sub" style="color:rgba(27,69,106,.6)">Prayer guides</div>
     </button>
-    <button onclick="switchTab('share')" style="background:var(--go);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
-      <span style="font-size:32px;line-height:1">💬</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Share</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Gospel &amp; culture tips</span>
+    <button class="tile" style="background:var(--orange)" onclick="switchTab('share')" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <div class="tile-label">Share</div>
+      <div class="tile-sub">Resources</div>
     </button>
-    <button onclick="switchTab('celebrate')" style="background:var(--gbj);border:none;border-radius:14px;padding:20px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;transition:filter .1s" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
-      <span style="font-size:32px;line-height:1">🎉</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#fff;letter-spacing:.3px">Celebrate</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:10px;color:rgba(255,255,255,.8);font-weight:500">Tracking &amp; reports</span>
+    <button class="tile" style="background:var(--mid-blue)" onclick="switchTab('celebrate')" ontouchstart="this.style.filter='brightness(.88)'" ontouchend="this.style.filter=''">
+      <svg class="tile-icon" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <div class="tile-label">Celebrate</div>
+      <div class="tile-sub">Tallies &amp; contacts</div>
     </button>
   </div>
   <div class="sl">Daily Checklist</div>
