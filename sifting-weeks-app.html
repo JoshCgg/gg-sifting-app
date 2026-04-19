@@ -1343,7 +1343,7 @@ async function submitSurvey(){
   if(!email){ showToast('Please enter your email'); return; }
 
   var partnershipChecks = [];
-  document.querySelectorAll('#survey-partnership-list .chi').forEach(function(row){
+  document.querySelectorAll('#survey-partnership-list > .chi').forEach(function(row){
     if(row.querySelector('.chb.ck')){
       partnershipChecks.push(row.querySelector('.cht').textContent.trim());
     }
