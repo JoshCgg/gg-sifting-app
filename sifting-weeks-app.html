@@ -1046,7 +1046,11 @@ body{background:#0f2a40;color:#e8f0f8}
     <div class="card" style="margin-bottom:12px">
       <div style="font-size:12px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px">I would like to partner with Global Gates by:</div>
       <div id="survey-partnership-list">
-        <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Praying with you. Please send updates to my email above.</div></div>
+        <div class="chi" onclick="toggleSurveyPartnership(this,'prayer')" id="survey-prayer-row"><div class="chb"></div><div class="cht">Praying with you. Please send updates to my email above from the following workers.</div></div>
+        <div id="survey-prayer-workers-card" style="display:none;margin-left:20px;margin-top:8px;margin-bottom:4px;padding:10px 12px;background:var(--bright-gray);border-radius:10px;border-left:3px solid var(--blue-jeans)">
+          <div style="font-size:11px;color:#8a9aab;margin-bottom:8px">Select which workers you'd like updates from.</div>
+          <div id="survey-prayer-workers-list"></div>
+        </div>
         <div class="chi" onclick="toggleSurveyPartnership(this,'financial')" id="survey-financial-row"><div class="chb"></div><div class="cht">Investing in you. Please contact me about how I can give financially to a ministry.</div></div>
         <div id="survey-financial-workers-card" style="display:none;margin-left:20px;margin-top:8px;margin-bottom:4px;padding:10px 12px;background:var(--bright-gray);border-radius:10px;border-left:3px solid var(--orange)">
           <div style="font-size:11px;color:#8a9aab;margin-bottom:8px">Which worker(s) would you like to connect with about giving?</div>
@@ -1056,12 +1060,6 @@ body{background:#0f2a40;color:#e8f0f8}
         <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Going with you. Please send me information about long-term mission opportunities with Global Gates.</div></div>
         <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Going with you. Please send me information about internship opportunities with Global Gates.</div></div>
       </div>
-    </div>
-
-    <div class="card" id="survey-prayer-updates-card" style="margin-bottom:12px;display:none">
-      <div style="font-size:12px;font-weight:700;color:var(--indigo);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">I would like to receive prayer updates from:</div>
-      <div style="font-size:11px;color:#8a9aab;margin-bottom:12px">Select anyone whose ministry you'd like to follow and pray for.</div>
-      <div id="survey-prayer-updates-list"></div>
     </div>
 
     <button class="bp" style="background:var(--orange);border-radius:12px;font-family:var(--font-display);font-size:16px;margin-bottom:8px" onclick="submitSurvey()">Submit Reflection</button>
@@ -1307,49 +1305,34 @@ function handleSurveyTap(){
 
 function buildSurveyPrayerUpdates(){
   var options = [];
-  var recipients = [];
   try {
     options = (ST8.currentWeek.survey && ST8.currentWeek.survey.newsletterOptions) || [];
-    recipients = ST8.currentWeek.followUpRecipients || [];
   } catch(e) {}
 
-  // Prayer updates card
-  var card = document.getElementById('survey-prayer-updates-card');
-  var list = document.getElementById('survey-prayer-updates-list');
-  if(!options.length){
-    card.style.display = 'none';
-  } else {
-    card.style.display = 'block';
-    list.innerHTML = options.map(function(o){
-      return '<div class="chi" onclick="toggleCheck(this)" data-email="' + (o.email||'') + '">'
-        + '<div class="chb"></div>'
-        + '<div class="cht">' + (o.name||'') + '</div>'
-        + '</div>';
-    }).join('');
-  }
+  var prayerList = document.getElementById('survey-prayer-workers-list');
+  var financialList = document.getElementById('survey-financial-workers-list');
 
-  // Financial partnership workers card
-  var fwList = document.getElementById('survey-financial-workers-list');
-  if(fwList){
-    if(!recipients.length){
-      fwList.innerHTML = '<div style="font-size:12px;color:#8a9aab">No workers listed for this week.</div>';
-    } else {
-      fwList.innerHTML = recipients.map(function(r){
-        return '<div class="chi" onclick="toggleCheck(this)" data-email="' + (r.email||'') + '">'
+  var html = options.length
+    ? options.map(function(o){
+        return '<div class="chi" onclick="toggleCheck(this)" data-email="' + (o.email||'') + '">'
           + '<div class="chb"></div>'
-          + '<div class="cht">' + (r.name||r.email||'') + '</div>'
+          + '<div class="cht">' + (o.name||'') + '</div>'
           + '</div>';
-      }).join('');
-    }
-  }
+      }).join('')
+    : '<div style="font-size:12px;color:#8a9aab">No workers listed for this week.</div>';
+
+  if(prayerList) prayerList.innerHTML = html;
+  if(financialList) financialList.innerHTML = html;
 }
 
 function toggleSurveyPartnership(el, type){
   toggleCheck(el);
+  var isChecked = el.querySelector('.chb').classList.contains('ck');
   if(type === 'financial'){
-    var card = document.getElementById('survey-financial-workers-card');
-    var isChecked = el.querySelector('.chb').classList.contains('ck');
-    card.style.display = isChecked ? 'block' : 'none';
+    document.getElementById('survey-financial-workers-card').style.display = isChecked ? 'block' : 'none';
+  }
+  if(type === 'prayer'){
+    document.getElementById('survey-prayer-workers-card').style.display = isChecked ? 'block' : 'none';
   }
 }
 
@@ -1367,7 +1350,7 @@ async function submitSurvey(){
   });
 
   var prayerSignups = [];
-  document.querySelectorAll('#survey-prayer-updates-list .chi').forEach(function(row){
+  document.querySelectorAll('#survey-prayer-workers-list .chi').forEach(function(row){
     if(row.querySelector('.chb.ck')){
       prayerSignups.push({
         name: row.querySelector('.cht').textContent.trim(),
