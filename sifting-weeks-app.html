@@ -27,8 +27,19 @@
   --font-display: 'LemonMilk', 'Montserrat', sans-serif;
   --font-body: 'Montserrat', sans-serif;
   --font-scripture: 'Libre Baskerville', serif;
+  --gi: #1B456A;
+  --gbj: #53B8F3;
+  --go: #F38E53;
+  --gg: #ECF1EE;
+  --gbl: #3E67AC;
+  --gid: #122f4a;
+  --god: #d4703a;
+  --gbl2: #e8f5fd;
+  --r: 12px;
+  --rs: 8px;
+  --sh: 0 2px 12px rgba(27,69,106,.12);
+  --shl: 0 6px 32px rgba(27,69,106,.18);
 }
-:root{--gi:#1B456A;--gbj:#53B8F3;--go:#F38E53;--gg:#ECF1EE;--gbl:#3E67AC;--gid:#122f4a;--god:#d4703a;--gbl2:#e8f5fd;--r:12px;--rs:8px;--sh:0 2px 12px rgba(27,69,106,.12);--shl:0 6px 32px rgba(27,69,106,.18)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Montserrat',sans-serif;background:var(--bright-gray);color:var(--gi);min-height:100vh;padding-bottom:env(safe-area-inset-bottom,16px)}
 .topnav{background:var(--gi);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:14px 20px;padding-top:max(14px,env(safe-area-inset-top));position:sticky;top:0;z-index:100;box-shadow:var(--sh)}
@@ -1104,9 +1115,12 @@ body{background:#0f2a40;color:#e8f0f8}
 
 <!-- SUMMARY (sub-screen) -->
 <div class="screen" id="screen-summary">
-  <div class="back-bar" onclick="switchTab('celebrate')">
-    <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-    <div><div class="back-bar-label">← Back to Celebrate</div><div class="back-bar-sub">Weekly Summary</div></div>
+  <div class="cel-header">
+    <button class="cel-back-btn" onclick="switchTab('celebrate')">←</button>
+    <div>
+      <div class="cel-title">SUMMARY</div>
+      <div class="cel-subtitle">Weekly totals &amp; contacts</div>
+    </div>
   </div>
   <div id="summary-content"><div style="text-align:center;padding:40px;color:#a0b0c0;font-size:14px">Loading summary...</div></div>
 </div>
@@ -1567,6 +1581,7 @@ function resetContactForm(){
    'contact-info','contact-followup-time','contact-atmosphere','contact-notes','contact-prayer-req'
   ].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.querySelectorAll('#log-form-view .chb.ck').forEach(b=>{b.classList.remove('ck');b.innerHTML='';b.nextElementSibling.classList.remove('ck');});
+  document.querySelectorAll('#log-form-view .to.s').forEach(el => el.classList.remove('s'));
 }
 
 function renderContacts(){
