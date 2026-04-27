@@ -1604,6 +1604,43 @@ function renderContacts(){
 // ─── Tally ────────────────────────────────────────────────────────────────────
 function submitTally(){
   if(!gv('tally-team')){showToast('Please enter your team name');return;}
+
+  const wk = ST8.currentWeek;
+  if(wk && wk.id){
+    const c = ST8.counters;
+    const tallyDoc = {
+      weekId:        wk.id,
+      weekName:      wk.name || '',
+      weekCode:      wk.code || '',
+      city:          wk.city || '',
+      submittedAt:   new Date().toISOString(),
+      date:          new Date().toLocaleDateString(),
+      day:           GS('sifting-day') || '',
+      submitterName: gv('tally-submitter') || ST8.loggerName || '',
+      submitterPhone: ST8.loggerPhone || '',
+      teamName:      gv('tally-team') || '',
+      area:          gv('tally-area') || '',
+      doors:         c.doors   || 0,
+      gospel:        c.gospel  || 0,
+      prayer:        c.prayer  || 0,
+      pop:           c.pop     || 0,
+      films:         c.films   || 0,
+      studies:       c.studies || 0,
+      salvations:    c.salvations || 0,
+      booklets:      c.booklets   || 0,
+      infocards:     c.infocards  || 0,
+      spiritualAtm:  GS('spiritual-atm') || '',
+      teamMorale:    GS('team-morale')   || '',
+      story:         gv('tally-story')    || '',
+      warfare:       gv('tally-warfare')  || '',
+      prayerReqs:    gv('tally-prayer')   || '',
+      logistics:     gv('tally-logistics')|| ''
+    };
+    db.collection('tallies').add(tallyDoc)
+      .then(()=>showToast('Tally saved ✓'))
+      .catch(e=>console.error('Tally write failed:',e));
+  }
+
   openEmailModal('tally');
 }
 
