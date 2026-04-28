@@ -1678,39 +1678,141 @@ function sendEmail(){
 }
 
 // ─── Summary ──────────────────────────────────────────────────────────────────
-function buildSummary(){
-  const wc=ST8.contacts.filter(c=>c.week===ST8.currentWeek.code);
-  const c=ST8.counters;
-  const slv=wc.filter(x=>x.salvation==='yes');
-  const pops=wc.filter(x=>x.popIndicators&&x.popIndicators.length>=3);
-  const urg=wc.filter(x=>x.followup==='urgent');
-  const fu=wc.filter(x=>x.followup&&x.followup!=='no');
-  let html=`
+async function buildSummary(){
+  // Show loading state immediately
+  document.getElementById('summary-content').innerHTML =
+    '<div style="text-align:center;padding:40px;color:#a0b0c0;font-size:14px">Loading summary…</div>';
+
+  const wc  = ST8.contacts.filter(c => c.week === ST8.currentWeek.code);
+  const loc = ST8.counters; // local device counters (still shown as fallback)
+
+  // ── Fetch live tallies from Firestore ──────────────────────────────────────
+  let tallies = {};
+  let tallyCount = 0;
+  let tallySource = 'local'; // 'firestore' | 'local'
+
+  const weekId = ST8.currentWeek.id || null;
+  if (weekId && db) {
+    try {
+      const snap = await db.collection('tallies').where('weekId', '==', weekId).get();
+      if (!snap.empty) {
+        const TALLY_KEYS = ['doors','gospel','prayer','pop','films','studies','salvations','booklets','infocards','pof'];
+        snap.forEach(d => {
+          const data = d.data();
+          TALLY_KEYS.forEach(k => {
+            if (typeof data[k] === 'number') tallies[k] = (tallies[k] || 0) + data[k];
+          });
+        });
+        tallyCount  = snap.size;
+        tallySource = 'firestore';
+      }
+    } catch(err) {
+      console.warn('Could not load live tallies:', err.message);
+      // Fall through to local counters below
+    }
+  }
+
+  // Fall back to local counters if Firestore returned nothing
+  if (tallySource === 'local') {
+    tallies = { ...loc };
+  }
+
+  const TALLY_LABELS = {
+    doors:      'Doors Knocked',
+    gospel:     'Gospel Presentations',
+    prayer:     'Prayer Conversations',
+    pop:        'People of Peace',
+    pof:        'Professions of Faith',
+    films:      'Jesus Films Given',
+    studies:    'Bible Studies Scheduled',
+    salvations: 'Salvations / Decisions',
+    booklets:   'Gospel Booklets / Tracts',
+    infocards:  'Info Cards',
+  };
+
+  // Only show rows with a value > 0
+  const activeTallyKeys = Object.keys(TALLY_LABELS).filter(k => (tallies[k] || 0) > 0);
+
+  const slv  = wc.filter(x => x.salvation === 'yes');
+  const pops = wc.filter(x => x.popIndicators && x.popIndicators.length >= 3);
+  const urg  = wc.filter(x => x.followup === 'urgent');
+  const fu   = wc.filter(x => x.followup && x.followup !== 'no');
+
+  const tallySourceNote = tallySource === 'firestore'
+    ? `<div style="font-size:11px;color:#8a9aab;margin-top:8px;">Live team totals · ${tallyCount} tally submission${tallyCount !== 1 ? 's' : ''}</div>`
+    : `<div style="font-size:11px;color:#e8a838;margin-top:8px;">⚠️ Showing your device's counts — couldn't reach server</div>`;
+
+  const tallyRowsHtml = activeTallyKeys.length
+    ? activeTallyKeys.map(k => `
+        <div class="ssr">
+          <div class="ssk">${TALLY_LABELS[k]}</div>
+          <div class="ssv">${tallies[k] || 0}</div>
+        </div>`).join('')
+    : `<div style="font-size:13px;color:#a0b0c0;padding:8px 0;">No tallies submitted yet.</div>`;
+
+  let html = `
   <div class="sl">Week: ${ST8.currentWeek.name} (${ST8.currentWeek.code})</div>
-  <div class="hb gr"><div style="font-size:13px;font-weight:700;color:#2e7d32;margin-bottom:8px">🎉 Decisions for Christ: ${c.salvations}</div>
-    ${slv.length?slv.map(x=>`<div style="font-size:12px;color:#3d5068;margin-bottom:3px">• ${x.name} ${x.lang?'('+x.lang+')':''} — ${x.location||'location not noted'}</div>`).join(''):'<div style="font-size:12px;color:#7a8fa0">None logged yet</div>'}
+  <div class="hb gr">
+    <div style="font-size:13px;font-weight:700;color:#2e7d32;margin-bottom:8px">🎉 Decisions for Christ: ${tallies.salvations || 0}</div>
+    ${slv.length
+      ? slv.map(x => `<div style="font-size:12px;color:#3d5068;margin-bottom:3px">• ${x.name} ${x.lang ? '(' + x.lang + ')' : ''} — ${x.location || 'location not noted'}</div>`).join('')
+      : '<div style="font-size:12px;color:#7a8fa0">None logged on this device yet</div>'}
   </div>
-  ${urg.length?`<div class="hb o"><div style="font-size:13px;font-weight:700;color:#c62828;margin-bottom:8px">⚡ Urgent Follow-ups (${urg.length})</div>${urg.map(x=>`<div style="font-size:12px;color:#3d5068;margin-bottom:6px"><strong>${x.name}</strong> · ${x.contactInfo||'no contact info'}<br><span style="color:#7a8fa0">${x.location||''} ${x.followupTime?'— Best time: '+x.followupTime:''}</span></div>`).join('')}</div>`:''}
-  <div class="sl">Weekly Totals</div>
+  ${urg.length ? `
+  <div class="hb o">
+    <div style="font-size:13px;font-weight:700;color:#c62828;margin-bottom:8px">⚡ Urgent Follow-ups (${urg.length})</div>
+    ${urg.map(x => `
+      <div style="font-size:12px;color:#3d5068;margin-bottom:6px">
+        <strong>${x.name}</strong> · ${x.contactInfo || 'no contact info'}<br>
+        <span style="color:#7a8fa0">${x.location || ''} ${x.followupTime ? '— Best time: ' + x.followupTime : ''}</span>
+      </div>`).join('')}
+  </div>` : ''}
+  <div class="sl">Team Totals</div>
   <div class="sst">
-    <div class="ssr"><div class="ssk">Doors Knocked</div><div class="ssv">${c.doors}</div></div>
-    <div class="ssr"><div class="ssk">Gospel Presentations</div><div class="ssv">${c.gospel}</div></div>
-    <div class="ssr"><div class="ssk">Prayer Conversations</div><div class="ssv">${c.prayer}</div></div>
-    <div class="ssr"><div class="ssk">People of Peace Found</div><div class="ssv">${c.pop}</div></div>
-    <div class="ssr"><div class="ssk">Jesus Films Given</div><div class="ssv">${c.films}</div></div>
-    <div class="ssr"><div class="ssk">Bible Studies Scheduled</div><div class="ssv">${c.studies}</div></div>
-    <div class="ssr"><div class="ssk">Salvations / Decisions</div><div class="ssv">${c.salvations}</div></div>
-    <div class="ssr"><div class="ssk">Total Contacts Logged</div><div class="ssv">${wc.length}</div></div>
+    ${tallyRowsHtml}
   </div>
-  ${pops.length?`<div class="sl">People of Peace (${pops.length})</div>${pops.map(x=>`<div class="card" style="border-left:4px solid #4caf50;margin-bottom:8px"><div class="card-title">${x.name} <span class="tag tg-gr">POP</span></div><div class="card-sub">${x.religion} ${x.lang?'· '+x.lang:''} · ${x.location||'no location'}</div>${x.contactInfo?`<div style="font-size:12px;margin-top:4px;color:var(--gbl)">📞 ${x.contactInfo}</div>`:''} ${x.followupTime?`<div style="font-size:12px;color:#7a8fa0">Best time: ${x.followupTime}</div>`:''}</div>`).join('')}`:''}
-  ${fu.length?`<div class="sl">All Follow-ups (${fu.length})</div>${fu.map(x=>`<div class="ci"><div class="cd ${x.followup==='urgent'?'dg':x.followup==='visit'?'dst':'dp'}"></div><div style="flex:1"><div class="cn">${x.name}</div><div class="cm">${x.religion} ${x.lang?'('+x.lang+')':''} · ${x.location||'no location'}</div>${x.contactInfo?`<div style="font-size:12px;color:var(--gbl)">📞 ${x.contactInfo}</div>`:''}<span class="ub ${x.followup==='urgent'?'uu':x.followup==='visit'?'uv':'uc'}">${x.followup}</span>${x.followupTime?`<span style="font-size:11px;color:#7a8fa0;margin-left:6px">Best: ${x.followupTime}</span>`:''}</div></div>`).join('')}`:''}
-  <div class="sl">All Contacts (${wc.length})</div>
-  ${!wc.length?'<div style="text-align:center;padding:20px;color:#a0b0c0;font-size:13px">No contacts logged yet</div>':wc.map(x=>`<div class="ci"><div class="cd ${x.happened==='shared-gospel'?'dg':x.salvation==='yes'?'dpo':x.happened==='bible-study'?'dst':'dp'}"></div><div style="flex:1;min-width:0"><div class="cn">${x.name} ${x.salvation==='yes'?'🎉':''} ${x.popIndicators&&x.popIndicators.length>=3?"<span class='tag tg-gr'>POP</span>":''}</div><div class="cm">${x.date} ${x.time} · ${x.happened.replace(/-/g,' ')} · ${x.religion} ${x.lang?'('+x.lang+')':''}</div><div class="cm">${x.location||''} ${x.contactInfo?'· 📞 '+x.contactInfo:''}</div>${x.notes?`<div style="font-size:12px;color:#3d5068;margin-top:4px;line-height:1.5">${x.notes.substring(0,120)}${x.notes.length>120?'...':''}</div>`:''}</div></div>`).join('')}
+  ${tallySourceNote}
+  ${pops.length ? `
+  <div class="sl">People of Peace (${pops.length})</div>
+  ${pops.map(x => `
+    <div class="card" style="border-left:4px solid #4caf50;margin-bottom:8px">
+      <div class="card-title">${x.name} <span class="tag tg-gr">POP</span></div>
+      <div class="card-sub">${x.religion} ${x.lang ? '· ' + x.lang : ''} · ${x.location || 'no location'}</div>
+      ${x.contactInfo ? `<div style="font-size:12px;margin-top:4px;color:var(--gbl)">📞 ${x.contactInfo}</div>` : ''}
+      ${x.followupTime ? `<div style="font-size:12px;color:#7a8fa0">Best time: ${x.followupTime}</div>` : ''}
+    </div>`).join('')}` : ''}
+  ${fu.length ? `
+  <div class="sl">All Follow-ups (${fu.length})</div>
+  ${fu.map(x => `
+    <div class="ci">
+      <div class="cd ${x.followup === 'urgent' ? 'dg' : x.followup === 'visit' ? 'dst' : 'dp'}"></div>
+      <div style="flex:1">
+        <div class="cn">${x.name}</div>
+        <div class="cm">${x.religion} ${x.lang ? '(' + x.lang + ')' : ''} · ${x.location || 'no location'}</div>
+        ${x.contactInfo ? `<div style="font-size:12px;color:var(--gbl)">📞 ${x.contactInfo}</div>` : ''}
+        <span class="ub ${x.followup === 'urgent' ? 'uu' : x.followup === 'visit' ? 'uv' : 'uc'}">${x.followup}</span>
+        ${x.followupTime ? `<span style="font-size:11px;color:#7a8fa0;margin-left:6px">Best: ${x.followupTime}</span>` : ''}
+      </div>
+    </div>`).join('')}` : ''}
+  <div class="sl">Contacts Logged on This Device (${wc.length})</div>
+  ${!wc.length
+    ? '<div style="text-align:center;padding:20px;color:#a0b0c0;font-size:13px">No contacts logged yet</div>'
+    : wc.map(x => `
+      <div class="ci">
+        <div class="cd ${x.happened === 'shared-gospel' ? 'dg' : x.salvation === 'yes' ? 'dpo' : x.happened === 'bible-study' ? 'dst' : 'dp'}"></div>
+        <div style="flex:1;min-width:0">
+          <div class="cn">${x.name} ${x.salvation === 'yes' ? '🎉' : ''} ${x.popIndicators && x.popIndicators.length >= 3 ? "<span class='tag tg-gr'>POP</span>" : ''}</div>
+          <div class="cm">${x.date} ${x.time} · ${x.happened.replace(/-/g, ' ')} · ${x.religion} ${x.lang ? '(' + x.lang + ')' : ''}</div>
+          <div class="cm">${x.location || ''} ${x.contactInfo ? '· 📞 ' + x.contactInfo : ''}</div>
+          ${x.notes ? `<div style="font-size:12px;color:#3d5068;margin-top:4px;line-height:1.5">${x.notes.substring(0, 120)}${x.notes.length > 120 ? '...' : ''}</div>` : ''}
+        </div>
+      </div>`).join('')}
   <div style="margin-top:16px">
     <button class="bp o" onclick="openEmailModal('tally')">📤 Email Full Report to Team</button>
     <button class="bs" onclick="if(confirm('Clear all data for this week?')){ST8.contacts=ST8.contacts.filter(c=>c.week!==ST8.currentWeek.code);for(const k in ST8.counters)ST8.counters[k]=0;save();updateCUI();updateStats();renderContacts();buildSummary();showToast('Data cleared')}">🗑 Clear This Week's Data</button>
   </div>`;
-  document.getElementById('summary-content').innerHTML=html;
+
+  document.getElementById('summary-content').innerHTML = html;
 }
 
 // ─── Prayer Guide ─────────────────────────────────────────────────────────────
