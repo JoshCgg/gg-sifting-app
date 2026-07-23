@@ -375,14 +375,7 @@ body{background:#0f2a40;color:#e8f0f8}
     </div>
   </div>
   <div class="sl">Daily Checklist</div>
-  <div class="card">
-    <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Morning quiet time &amp; prayer</div></div>
-    <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Morning training session attended</div></div>
-    <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Prayer walked assigned area</div></div>
-    <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Shared the gospel (or attempted)</div></div>
-    <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Logged all contacts</div></div>
-    <div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">Submitted daily tally</div></div>
-  </div>
+  <div class="card" id="daily-checklist-card"></div>
 </div>
 
 <!-- PREPARE -->
@@ -923,6 +916,15 @@ const PD=[
   {t:'For Your Return Home',v:'Matthew 28:19–20',pts:["Pray what God does in you this week continues when you return home","Ask God to show you 1–2 people in your own life to share with","Pray you would train others in what you've learned — multiplying the work"]},
 ];
 
+const DEFAULT_CHECKLIST = [
+  'Morning quiet time & prayer',
+  'Morning training session attended',
+  'Prayer walked assigned area',
+  'Shared the gospel (or attempted)',
+  'Logged all contacts',
+  'Submitted daily tally',
+];
+
 // ─── App State ────────────────────────────────────────────────────────────────
 const ST8={
   currentWeek:{name:'Sifting Week',code:'SIFTING',followUpRecipients:[]},
@@ -979,6 +981,16 @@ function applyModuleVisibility() {
   });
 }
 
+function renderChecklist(){
+  const items = (ST8.currentWeek.checklistItems && ST8.currentWeek.checklistItems.length)
+    ? ST8.currentWeek.checklistItems
+    : DEFAULT_CHECKLIST;
+  const card = document.getElementById('daily-checklist-card');
+  card.innerHTML = items.map(text =>
+    `<div class="chi" onclick="toggleCheck(this)"><div class="chb"></div><div class="cht">${text}</div></div>`
+  ).join('');
+}
+
 function loadState(){
   firebase.auth().onAuthStateChanged(user => {
     if (!user && ST8.currentWeek && ST8.currentWeek.id) {
@@ -999,7 +1011,7 @@ function loadState(){
     if(s.loggerName&&document.getElementById('logger-name'))document.getElementById('logger-name').value=s.loggerName;
     if(s.loggerPhone&&document.getElementById('logger-phone'))document.getElementById('logger-phone').value=s.loggerPhone;
   }catch(e){}
-  updateNav();updateCUI();renderContacts();buildPG();renderTallyCounters();loadAndRenderModules();
+  updateNav();updateCUI();renderContacts();buildPG();renderTallyCounters();renderChecklist();loadAndRenderModules();
 }
 function save(){
   try{localStorage.setItem('gg_v3',JSON.stringify({cw:ST8.currentWeek,wks:ST8.weeks,cnt:ST8.counters,con:ST8.contacts}));}catch(e){}
@@ -1270,10 +1282,10 @@ async function enterFromGate(){
         .then(() => console.log('Anonymous auth established'))
         .catch(e => console.warn('Anonymous auth failed:', e));
       const data=snap.docs[0].data();
-      const weekObj={id:snap.docs[0].id,code,name:data.label||data.name||('Week '+code),label:data.label||data.name||('Week '+code),city:data.city||'',region:data.region||'',startDate:data.startDate||null,endDate:data.endDate||null,status:data.status||'active',followUpRecipients:data.followUpRecipients||[],followUpMode:data.followUpMode||'inapp',followUpFormUrl:data.followUpFormUrl||'',survey:data.survey||null,tallyFields:data.tallyFields||[],activeModules:data.activeModules||[],fromFirestore:true};
+      const weekObj={id:snap.docs[0].id,code,name:data.label||data.name||('Week '+code),label:data.label||data.name||('Week '+code),city:data.city||'',region:data.region||'',startDate:data.startDate||null,endDate:data.endDate||null,status:data.status||'active',followUpRecipients:data.followUpRecipients||[],followUpMode:data.followUpMode||'inapp',followUpFormUrl:data.followUpFormUrl||'',survey:data.survey||null,tallyFields:data.tallyFields||[],activeModules:data.activeModules||[],checklistItems:data.checklistItems||[],fromFirestore:true};
       const primary=(data.followUpRecipients||[]).find(r=>r.primary)||data.followUpRecipients?.[0];
       if(primary?.email){document.getElementById('email-to').value=primary.email;localStorage.setItem('gg_et',primary.email);}
-      ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();renderTallyCounters();_cachedModules=null;loadAndRenderModules();updateNav();updateStats();dismissGate();
+      ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();renderTallyCounters();renderChecklist();_cachedModules=null;loadAndRenderModules();updateNav();updateStats();dismissGate();
     }else{
       errEl.textContent='Code word not found. Please check with your team leader.';
       errEl.style.display='block';
@@ -1305,10 +1317,10 @@ async function setWeekFromCode(){
         .then(() => console.log('Anonymous auth established'))
         .catch(e => console.warn('Anonymous auth failed:', e));
       const data=snap.docs[0].data();
-      const weekObj={id:snap.docs[0].id,code,name:data.label||data.name||('Week '+code),label:data.label||data.name||('Week '+code),city:data.city||'',region:data.region||'',startDate:data.startDate||null,endDate:data.endDate||null,status:data.status||'active',followUpRecipients:data.followUpRecipients||[],followUpMode:data.followUpMode||'inapp',followUpFormUrl:data.followUpFormUrl||'',survey:data.survey||null,tallyFields:data.tallyFields||[],activeModules:data.activeModules||[],fromFirestore:true};
+      const weekObj={id:snap.docs[0].id,code,name:data.label||data.name||('Week '+code),label:data.label||data.name||('Week '+code),city:data.city||'',region:data.region||'',startDate:data.startDate||null,endDate:data.endDate||null,status:data.status||'active',followUpRecipients:data.followUpRecipients||[],followUpMode:data.followUpMode||'inapp',followUpFormUrl:data.followUpFormUrl||'',survey:data.survey||null,tallyFields:data.tallyFields||[],activeModules:data.activeModules||[],checklistItems:data.checklistItems||[],fromFirestore:true};
       const primary=(data.followUpRecipients||[]).find(r=>r.primary)||data.followUpRecipients?.[0];
       if(primary?.email){document.getElementById('email-to').value=primary.email;localStorage.setItem('gg_et',primary.email);}
-      ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();renderTallyCounters();_cachedModules=null;loadAndRenderModules();updateNav();updateStats();closeModal('week-modal');showToast('✅ Switched to: '+weekObj.name);
+      ST8.currentWeek=weekObj;ST8.weeks=[weekObj];save();renderTallyCounters();renderChecklist();_cachedModules=null;loadAndRenderModules();updateNav();updateStats();closeModal('week-modal');showToast('✅ Switched to: '+weekObj.name);
     }else{
       showToast('Code word not found. Check with your team leader.');
     }
