@@ -981,6 +981,18 @@ function applyModuleVisibility() {
   });
 }
 
+function weekAcceptsSubmissions(){
+  const wk = ST8.currentWeek;
+  if(!wk) return false;
+  if(wk.status === 'closed' || wk.status === 'archived') return false;
+  if(wk.startDate){
+    const today = new Date(); today.setHours(0,0,0,0);
+    const start = new Date(wk.startDate + 'T00:00:00');
+    if(today < start) return false;
+  }
+  return true;
+}
+
 function renderChecklist(){
   const items = (ST8.currentWeek.checklistItems && ST8.currentWeek.checklistItems.length)
     ? ST8.currentWeek.checklistItems
@@ -1331,6 +1343,10 @@ async function setWeekFromCode(){
 
 // ─── Contact Submit ───────────────────────────────────────────────────────────
 function submitContact(){
+  if(!weekAcceptsSubmissions()){
+    showToast('This week is not currently accepting submissions.');
+    return;
+  }
   const name=gv('contact-name')||'Unnamed person';
   const happened=GS('what-happened');
   if(!happened){showToast('Select what happened');return;}
@@ -1410,6 +1426,10 @@ function renderContacts(){
 
 // ─── Tally ────────────────────────────────────────────────────────────────────
 function submitTally(){
+  if(!weekAcceptsSubmissions()){
+    showToast('This week is not currently accepting submissions.');
+    return;
+  }
   if(!gv('tally-team')){showToast('Please enter your team name');return;}
 
   const wk = ST8.currentWeek;
