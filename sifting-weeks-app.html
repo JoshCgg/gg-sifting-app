@@ -1713,10 +1713,8 @@ async function loadAndRenderModules() {
   });
 
   try {
-    // Fetch all active modules in one query
-    const snap = await db.collection('modules')
-      .where('status', '==', 'global')
-      .get();
+    // Fetch all modules — the week's activeModules array is the sole visibility gate
+    const snap = await db.collection('modules').get();
 
     const modules = {};
     snap.forEach(d => {
